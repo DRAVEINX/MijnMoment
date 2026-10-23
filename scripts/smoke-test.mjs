@@ -1,13 +1,11 @@
 import { readFileSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
-assert.ok(existsSync('index.html'),'index.html ontbreekt');
-assert.ok(existsSync('styles.css'),'styles.css ontbreekt');
-assert.ok(existsSync('app.js'),'app.js ontbreekt');
-assert.ok(existsSync('manifest.webmanifest'),'manifest ontbreekt');
+for (const file of ['index.html','styles.css','app.js','manifest.webmanifest','sw.js','assets/mijnmoment-icon.svg']) assert.ok(existsSync(file),`Bestand ontbreekt: ${file}`);
 const html=readFileSync('index.html','utf8');
-for(const feature of ['MijnMoment','planning','communicatie','dagboek','tekenen','doelen','instellingen'])assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
+for (const feature of ['MijnMoment','planning','afspraken','communicatie','dagboek','tekenen','doelen','instellingen']) assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
 const js=readFileSync('app.js','utf8');
-assert.ok(js.includes('localStorage'),'Lokale opslag ontbreekt');
+for (const feature of ['localStorage','appointment-form','appointment-list','conflict','speechSynthesis','download-drawing']) assert.ok(js.includes(feature),`JavaScript mist functie of controle: ${feature}`);
 const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 assert.equal(manifest.name,'MijnMoment');
+assert.equal(manifest.display,'standalone');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
