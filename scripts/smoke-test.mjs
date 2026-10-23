@@ -14,3 +14,6 @@ assert.equal(capacitor.appId,'nl.draveinx.mijnmoment');
 assert.equal(capacitor.webDir,'dist');
 assert.ok(readFileSync('app.js','utf8').includes("padStart(2,'0')"),'Datumveld moet een stabiele ISO-datum gebruiken');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
+
+assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
+assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
