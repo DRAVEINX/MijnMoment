@@ -13,6 +13,12 @@ const capacitor=JSON.parse(readFileSync('capacitor.config.json','utf8'));
 assert.equal(capacitor.appId,'nl.draveinx.mijnmoment');
 assert.equal(capacitor.webDir,'dist');
 assert.ok(readFileSync('app.js','utf8').includes("padStart(2,'0')"),'Datumveld moet een stabiele ISO-datum gebruiken');
+
+const ids=[...html.matchAll(/\\bid="([^"]+)"/g)].map(match=>match[1]);
+assert.equal(ids.length,new Set(ids).size,'HTML mag geen dubbele id-attributen bevatten');
+const referencedIds=[...js.matchAll(/\\$\\('#([a-zA-Z0-9_-]+)'\\)/g)].map(match=>match[1]);
+for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
+assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
 
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
