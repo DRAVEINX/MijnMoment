@@ -24,7 +24,8 @@ assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet ee
 
 assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=true)"),'Terugknop moet alle functievakken verbergen');
 assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
-assert.ok(js.includes("$('.feature').forEach(s=>s.hidden=s!==section)"),'Navigatie moet precies één functievak tonen');
+assert.ok(js.includes("$('.feature').forEach(s=>s.hidden=true)"),'Dashboardnavigatie moet andere functievakken sluiten');
+assert.ok(js.includes("if(section.classList.contains('feature'))section.hidden=false"),'Alleen functievakken die bij een tegel horen mogen als scherm openen');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
