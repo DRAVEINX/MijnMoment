@@ -26,6 +26,8 @@ jobs:
         run: npm run build:web
       - name: Generate Android project
         run: npx cap add android
+      - name: Set Android 16 target SDK
+        run: sed -i 's/compileSdkVersion = 35/compileSdkVersion = 36/; s/targetSdkVersion = 35/targetSdkVersion = 36/' android/variables.gradle
       - name: Sync web assets
         run: npx cap sync android
       - name: Build debug APK
