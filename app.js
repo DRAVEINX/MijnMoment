@@ -20,7 +20,7 @@ function showMood(){if(data.mood){$('#mood-status').textContent='Je koos: '+data
 $$('[data-mood]').forEach(b=>b.addEventListener('click',()=>{data.mood=b.dataset.mood;persist();showMood();}));
 function returnToHome(){ $$('.feature').forEach(s=>s.hidden=true); $('.tiles').scrollIntoView({behavior:'smooth',block:'start'}); }
 $$('.feature').forEach(section=>{const back=makeButton('← Terug naar start','secondary',returnToHome);back.classList.add('back-home');section.prepend(back);});
-$('[data-target]').forEach(b=>b.addEventListener('click',()=>{const section=document.getElementById(b.dataset.target);if(!section)return;$('.feature').forEach(s=>s.hidden=true);if(section.classList.contains('feature'))section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});}));
+$('[data-target]').forEach(b=>b.addEventListener('click',()=>{const section=document.getElementById(b.dataset.target);if(!section)return;$$('.feature').forEach(s=>s.hidden=true);if(section.classList.contains('feature'))section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});}));
 $$('[data-phrase]').forEach(b=>b.addEventListener('click',()=>$('#say-text').value=b.dataset.phrase));
 $('#speak').addEventListener('click',()=>{const text=$('#say-text').value.trim();if(!text){$('#say-text').focus();return;}if(!('speechSynthesis'in window)){alert('Voorlezen wordt niet ondersteund door deze browser.');return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='nl-NL';speechSynthesis.speak(utterance);});
 $('#clear-speech').addEventListener('click',()=>$('#say-text').value='');
