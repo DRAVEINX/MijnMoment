@@ -51,6 +51,8 @@ assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bove
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
 assert.ok(html.includes('id="goals-status" aria-live="polite"'),'Kleine stapjes moeten een toegankelijke voortgangsmelding hebben');
+assert.ok(html.includes('<progress id="goals-progress" max="3" value="0">'),'Kleine stapjes moeten een visuele voortgangsbalk hebben');
+assert.ok(js.includes("progress.value=checked"),'Voortgangsbalk moet meebewegen met afgevinkte stapjes');
 assert.ok(js.includes('function updateGoalsStatus()'),'Voortgang van kleine stapjes moet worden bijgewerkt');
 assert.ok(js.includes('Goed bezig! Je hebt ${checked} van de ${total} stapjes afgevinkt.'),'Voortgang moet tonen hoeveel stapjes zijn afgevinkt');
 assert.ok(js.includes("status.textContent='Voorlezen is klaar.'"),'Voorlezen moet een eindmelding geven');
