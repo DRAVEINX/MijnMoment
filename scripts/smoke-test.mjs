@@ -33,6 +33,8 @@ assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een
 assert.ok(js.includes("if(!section)return;$$('.feature').forEach(s=>s.hidden=true)"),'Dashboardnavigatie moet alle andere functievakken sluiten');
 assert.ok(js.includes("if(section.classList.contains('feature'))section.hidden=false"),'Alleen functievakken die bij een tegel horen mogen als scherm openen');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
+assert.ok(js.includes("'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet titel, datum en tijd bevestigen');
+assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
