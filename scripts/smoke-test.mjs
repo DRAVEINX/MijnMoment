@@ -105,6 +105,9 @@ assert.ok(js.includes('Deze back-up is ongeldig of niet van MijnMoment. Je gegev
 assert.ok(js.includes('Een back-up terugzetten vervangt de huidige gegevens op dit apparaat.'),'Terugzetten moet vooraf waarschuwen voor vervangen van gegevens');
 assert.ok(js.includes("if(!persist()){data=previous;$('#settings-status').textContent='Terugzetten is niet gelukt. Je huidige gegevens zijn behouden.';return;}"),'Bij opslagfout moet import de huidige gegevens herstellen');
 
+assert.ok(js.includes("incoming.appointments.length<=1000"),'Back-upimport moet het aantal afspraken begrenzen');
+assert.ok(js.includes("new Set(incoming.appointments.map(x=>x&&x.id)).size===incoming.appointments.length"),'Back-upimport moet dubbele afspraak-ID’s afwijzen');
+assert.ok(js.includes("typeof x.id==='string'&&x.id.length>0&&typeof x.title==='string'&&x.title.trim().length>0"),'Back-upimport moet afspraken met ontbrekende ID of lege naam afwijzen');
 assert.ok(js.includes("incoming.tasks.length<=1000&&incoming.tasks.every(x=>x&&typeof x.text==='string'&&x.text.length<=120&&typeof x.done==='boolean')"),'Back-upimport moet het aantal taken en de lengte van taaknamen begrenzen');
 assert.ok(js.includes("d.toISOString().slice(0,10)===x.date"),'Back-upimport moet onmogelijke kalenderdatums afwijzen');
 assert.ok(js.includes("['','Groen','Oranje','Rood'].includes(incoming.mood)"),'Back-upimport moet alleen bekende gevoelswaarden accepteren');
