@@ -49,6 +49,9 @@ assert.ok(js.includes('Je hebt nog geen afspraken. Voeg hierboven een afspraak t
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
+assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
+assert.ok(js.includes("status.textContent='Voorlezen is klaar.'"),'Voorlezen moet een eindmelding geven');
+assert.ok(js.includes("$('#speech-status').textContent='De tekst is gewist.'"),'Wissen moet een statusmelding geven');
 assert.ok(html.includes('Gratis voor iedereen')&&html.includes('Geen begeleidersportaal'),'App moet gratis zijn en geen begeleidersportaal tonen');
 for (const target of [...html.matchAll(/data-target="([^"]+)"/g)].map(m=>m[1])) {
   assert.ok(ids.includes(target), `Dashboardknop verwijst naar ontbrekend onderdeel: #${target}`);
