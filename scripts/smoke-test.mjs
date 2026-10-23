@@ -33,6 +33,7 @@ assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een
 assert.ok(js.includes("if(!section)return;$$('.feature').forEach(s=>s.hidden=true)"),'Dashboardnavigatie moet alle andere functievakken sluiten');
 assert.ok(js.includes("if(section.classList.contains('feature'))section.hidden=false"),'Alleen functievakken die bij een tegel horen mogen als scherm openen');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
+assert.ok(js.includes("if(!title){status.textContent='Vul eerst een naam in voor je afspraak.';$('#appointment-title').focus();return;}if(!date||!time){status.textContent='Vul de datum en tijd van je afspraak in.';return;}"),'Ontbrekende afspraakgegevens moeten duidelijke uitleg geven');
 assert.ok(js.includes("$('#appointment-date').min=todayISO"),'Datumkiezer moet afspraken in het verleden blokkeren');
 assert.ok(js.includes("if(date<todayISO){status.textContent='Kies vandaag of een datum in de toekomst voor deze afspraak.';return;}"),'Handmatige invoer van een datum in het verleden moet worden tegengehouden');
 assert.ok(js.includes("if(date===todayISO&&time<currentTime){status.textContent='Dit tijdstip is vandaag al voorbij. Kies een latere tijd.';return;}"),'Een verstreken tijdstip vandaag moet worden tegengehouden');
