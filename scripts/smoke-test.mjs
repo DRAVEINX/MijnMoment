@@ -5,6 +5,7 @@ const html=readFileSync('index.html','utf8');
 for (const feature of ['MijnMoment','planning','afspraken','communicatie','dagboek','tekenen','doelen','instellingen','gevoelens','section-intro','tile-icon','site-footer','dictate-diary','font-larger','contrast-toggle']) assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
 const js=readFileSync('app.js','utf8');
 for (const feature of ['localStorage','appointment-form','appointment-list','conflict','speechSynthesis','download-drawing','SpeechRecognition','highContrast','fontScale']) assert.ok(js.includes(feature),`JavaScript mist functie of controle: ${feature}`);
+assert.ok(js.includes("area.value=b.dataset.phrase;area.focus();"),'Een gekozen communicatiezin moet direct bewerkbaar zijn');
 const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 assert.equal(manifest.name,'MijnMoment');
 assert.equal(manifest.display,'standalone');
