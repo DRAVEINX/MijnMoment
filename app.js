@@ -21,7 +21,7 @@ $('[data-mood]').forEach(b=>{b.setAttribute('aria-pressed','false');b.addEventLi
 function returnToHome(){ $$('.feature').forEach(s=>s.hidden=true); $('.tiles').scrollIntoView({behavior:'smooth',block:'start'}); }
 $$('.feature').forEach(section=>{const back=makeButton('← Terug naar start','secondary',returnToHome);back.classList.add('back-home');section.prepend(back);});
 $('[data-target]').forEach(b=>b.addEventListener('click',()=>{const section=document.getElementById(b.dataset.target);if(!section)return;$$('.feature').forEach(s=>s.hidden=true);if(section.classList.contains('feature'))section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});}));
-$$('[data-phrase]').forEach(b=>b.addEventListener('click',()=>$('#say-text').value=b.dataset.phrase));
+$('[data-phrase]').forEach(b=>b.addEventListener('click',()=>{const area=$('#say-text');area.value=b.dataset.phrase;area.focus();}));
 $('#speak').addEventListener('click',()=>{const text=$('#say-text').value.trim();if(!text){$('#say-text').focus();return;}if(!('speechSynthesis'in window)){alert('Voorlezen wordt niet ondersteund door deze browser.');return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='nl-NL';speechSynthesis.speak(utterance);});
 $('#clear-speech').addEventListener('click',()=>$('#say-text').value='');
 $('#diary').value=data.diary||'';
