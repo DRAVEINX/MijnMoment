@@ -21,7 +21,7 @@ const referencedIds=[...js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g)].map(match=>ma
 for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
 assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
 assert.ok(html.includes('id="task-status" aria-live="polite"'),'Taakstatus moet toegankelijk worden aangekondigd');
-assert.ok(js.includes("$('#task-status').textContent='Taak toegevoegd: '+text"),'Nieuwe taak moet een bevestiging tonen');
+assert.ok(js.includes("$('#task-status').textContent=saved?'Taak toegevoegd en opgeslagen: '+text:'Taak toegevoegd, maar niet opgeslagen."),'Nieuwe taak moet een eerlijke opslagstatus tonen');
 assert.ok(js.includes("'Taak verwijderd: '+removed.text"),'Verwijderen van taak moet een bevestiging tonen');
 assert.ok(html.includes('id="drawing-status" aria-live="polite"'),'Tekeningstatus moet toegankelijk worden aangekondigd');
 assert.ok(js.includes("$('#drawing-status').textContent='Je tekening is gewist.'"),'Wissen van tekening moet een bevestiging tonen');
@@ -38,7 +38,7 @@ assert.ok(js.includes("if(!title){status.textContent='Vul eerst een naam in voor
 assert.ok(js.includes("$('#appointment-date').min=todayISO"),'Datumkiezer moet afspraken in het verleden blokkeren');
 assert.ok(js.includes("if(date<todayISO){status.textContent='Kies vandaag of een datum in de toekomst voor deze afspraak.';return;}"),'Handmatige invoer van een datum in het verleden moet worden tegengehouden');
 assert.ok(js.includes("if(date===todayISO&&time<currentTime){status.textContent='Dit tijdstip is vandaag al voorbij. Kies een latere tijd.';return;}"),'Een verstreken tijdstip vandaag moet worden tegengehouden');
-assert.ok(js.includes("'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet titel, datum en tijd bevestigen');
+assert.ok(js.includes("status.textContent=saved?'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet alleen succesvolle opslag bevestigen en bij fout waarschuwen');
 assert.ok(js.includes("$('#appointment-title').value='';$('#appointment-title').focus();"),'Na opslaan van een afspraak moet de naam invoer klaarstaan voor de volgende afspraak');
 assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
