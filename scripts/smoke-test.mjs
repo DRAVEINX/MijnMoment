@@ -1,0 +1,13 @@
+import { readFileSync, existsSync } from 'node:fs';
+import assert from 'node:assert/strict';
+assert.ok(existsSync('index.html'),'index.html ontbreekt');
+assert.ok(existsSync('styles.css'),'styles.css ontbreekt');
+assert.ok(existsSync('app.js'),'app.js ontbreekt');
+assert.ok(existsSync('manifest.webmanifest'),'manifest ontbreekt');
+const html=readFileSync('index.html','utf8');
+for(const feature of ['MijnMoment','planning','communicatie','dagboek','tekenen','doelen','instellingen'])assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
+const js=readFileSync('app.js','utf8');
+assert.ok(js.includes('localStorage'),'Lokale opslag ontbreekt');
+const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
+assert.equal(manifest.name,'MijnMoment');
+console.log('MijnMoment smoke-tests: alles geslaagd.');
