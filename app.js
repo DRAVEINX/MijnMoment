@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const key='mijnmoment-data-v2';
-const defaults={tasks:[],appointments:[],mood:'',diary:'',goals:[false,false,false]};
+const defaults={tasks:[],appointments:[],mood:'',diary:'',goals:[false,false,false],fontScale:1,highContrast:false};
 let data={...defaults};
 try{const saved=JSON.parse(localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'{}');data={...defaults,...saved};}catch{}
 if(!Array.isArray(data.tasks))data.tasks=[];
@@ -23,6 +23,11 @@ $('#speak').addEventListener('click',()=>{const text=$('#say-text').value.trim()
 $('#clear-speech').addEventListener('click',()=>$('#say-text').value='');
 $('#diary').value=data.diary||'';
 $('#save-diary').addEventListener('click',()=>{data.diary=$('#diary').value;persist();$('#diary-status').textContent='Je dagboek is op dit apparaat bewaard.';});
+$('#dictate-diary').addEventListener('click',()=>{const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;const status=$('#dictation-status');if(!SpeechRecognition){status.textContent='Spraakherkenning wordt niet ondersteund in deze browser. Je kunt je tekst zelf typen.';return;}const recognition=new SpeechRecognition();recognition.lang='nl-NL';recognition.interimResults=false;recognition.maxAlternatives=1;status.textContent='Ik luister…';recognition.onresult=e=>{const spoken=e.results[0][0].transcript;const area=$('#diary');area.value=(area.value.trim()?area.value.trim()+' ':'')+spoken;status.textContent='Je spraak is omgezet naar tekst. Bewaar je dagboek om het te bewaren.';};recognition.onerror=e=>{status.textContent=e.error==='not-allowed'?'Microfoontoegang is niet toegestaan. Controleer je browserinstellingen.':'Inspreken lukte niet. Probeer het opnieuw of typ je tekst.';};recognition.onend=()=>{if(status.textContent==='Ik luister…')status.textContent='Geen spraak herkend. Probeer het opnieuw.';};try{recognition.start();}catch{status.textContent='Inspreken kan nu niet starten. Probeer het opnieuw.';}});
+function applyDisplaySettings(){document.documentElement.style.fontSize=(17*(Number(data.fontScale)||1))+'px';document.body.classList.toggle('high-contrast',!!data.highContrast);$('#display-status').textContent='Tekstgrootte: '+Math.round((Number(data.fontScale)||1)*100)+'%. Hoog contrast: '+(data.highContrast?'aan':'uit')+'.';}
+$('#font-smaller').addEventListener('click',()=>{data.fontScale=Math.max(.85,Math.round(((Number(data.fontScale)||1)-.1)*100)/100);persist();applyDisplaySettings();});
+$('#font-larger').addEventListener('click',()=>{data.fontScale=Math.min(1.5,Math.round(((Number(data.fontScale)||1)+.1)*100)/100);persist();applyDisplaySettings();});
+$('#contrast-toggle').addEventListener('click',()=>{data.highContrast=!data.highContrast;persist();applyDisplaySettings();});
 const goalLabels=['Ik neem een rustmoment','Ik drink wat water','Ik doe iets wat ik leuk vind'];
 $$('.checklist input[type=checkbox]').forEach((cb,i)=>{cb.checked=!!data.goals[i];cb.addEventListener('change',()=>{data.goals[i]=cb.checked;persist();});});
 const canvas=$('#drawing'),ctx=canvas.getContext('2d');ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#2874c8';let drawing=false;
@@ -33,6 +38,6 @@ canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.
 $('#clear-drawing').addEventListener('click',()=>ctx.clearRect(0,0,canvas.width,canvas.height));
 $('#download-drawing').addEventListener('click',()=>{const a=document.createElement('a');a.download='mijnmoment-tekening.png';a.href=canvas.toDataURL('image/png');a.click();});
 $('#export-data').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mijnmoment-gegevens.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
-$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);renderTasks();renderAppointments();showMood();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
+$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();
 if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
