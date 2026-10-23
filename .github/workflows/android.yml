@@ -34,12 +34,18 @@ jobs:
           grep -Eq 'targetSdkVersion[[:space:]]*=[[:space:]]*36' android/variables.gradle
       - name: Sync web assets
         run: npx cap sync android
-      - name: Build debug APK
+      - name: Build Android debug APK and test bundle
         working-directory: android
-        run: chmod +x gradlew && ./gradlew assembleDebug
-      - name: Upload debug APK
+        run: chmod +x gradlew && ./gradlew assembleDebug bundleDebug
+      - name: Verify Android build outputs
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+          test -s android/app/build/outputs/bundle/debug/app-debug.aab
+      - name: Upload Android test builds
         uses: actions/upload-artifact@v4
         with:
           name: mijnmoment-android-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/bundle/debug/app-debug.aab
           if-no-files-found: error
