@@ -98,3 +98,9 @@ assert.ok(js.includes("if(!saved)$('#display-status').textContent='Tekstgrootte 
 assert.ok(js.includes("if(!saved)$('#display-status').textContent='Contrast aangepast, maar niet opgeslagen."),'Hoog contrast moet opslagfouten melden');
 assert.ok(js.includes("if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen."),'Tekening moet opslagfouten melden');
 assert.ok(js.includes("const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.'"),'Tekening wissen mag geen succesvolle opslag claimen als opslaan mislukt');
+
+assert.ok(js.includes("$('#import-data').addEventListener('click',()=>$('#import-file').click())"),'Back-up terugzetten moet een bestand kunnen kiezen');
+assert.ok(js.includes("file.size>5*1024*1024"),'Import moet extreem grote back-upbestanden afwijzen');
+assert.ok(js.includes('Deze back-up is ongeldig of niet van MijnMoment. Je gegevens zijn niet gewijzigd.'),'Ongeldige back-ups mogen bestaande gegevens niet wijzigen');
+assert.ok(js.includes('Een back-up terugzetten vervangt de huidige gegevens op dit apparaat.'),'Terugzetten moet vooraf waarschuwen voor vervangen van gegevens');
+assert.ok(js.includes("if(!persist()){data=previous;$('#settings-status').textContent='Terugzetten is niet gelukt. Je huidige gegevens zijn behouden.';return;}"),'Bij opslagfout moet import de huidige gegevens herstellen');
