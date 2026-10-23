@@ -8,4 +8,8 @@ for (const feature of ['localStorage','appointment-form','appointment-list','con
 const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 assert.equal(manifest.name,'MijnMoment');
 assert.equal(manifest.display,'standalone');
+const capacitor=JSON.parse(readFileSync('capacitor.config.json','utf8'));
+assert.equal(capacitor.appId,'nl.draveinx.mijnmoment');
+assert.equal(capacitor.webDir,'dist');
+assert.ok(readFileSync('app.js','utf8').includes("padStart(2,'0')"),'Datumveld moet een stabiele ISO-datum gebruiken');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
