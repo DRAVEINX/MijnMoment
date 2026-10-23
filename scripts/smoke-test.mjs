@@ -77,7 +77,7 @@ assert.ok(sw.includes("caches.match(request)"),'Offline bestanden moeten uit de 
 assert.ok(sw.includes("request.mode === 'navigate'"),'Offline navigatie moet naar de startpagina kunnen terugvallen');
 assert.ok(js.includes("data.drawing=canvas.toDataURL('image/png')"),'Tekeningen moeten lokaal worden bewaard');
 assert.ok(js.includes('savedDrawing.src=data.drawing'),'Opgeslagen tekening moet bij opnieuw openen worden teruggezet');
-assert.ok(js.includes("$('#diary').value='';ctx.clearRect(0,0,canvas.width,canvas.height);"),'Alle gegevens verwijderen moet ook de zichtbare tekening wissen');
+assert.ok(js.includes("$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);"),'Alle gegevens verwijderen moet ook dagboek, communicatie-invoer en lopend voorlezen wissen');
 assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))"),'Gekozen gevoel moet met aria-pressed toegankelijk worden aangegeven');
 const cssForMood=readFileSync('styles.css','utf8');
 assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
