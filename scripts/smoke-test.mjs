@@ -39,6 +39,8 @@ assert.ok(js.includes("if(date===todayISO&&time<currentTime){status.textContent=
 assert.ok(js.includes("'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet titel, datum en tijd bevestigen');
 assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
+assert.ok(js.includes('Je hebt nog geen taken. Voeg hierboven je eerste taak toe.'),'Lege takenlijst moet uitleg tonen');
+assert.ok(js.includes('Je hebt nog geen afspraken. Voeg hierboven een afspraak toe.'),'Lege afsprakenlijst moet uitleg tonen');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
