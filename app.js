@@ -56,7 +56,7 @@ $('#import-file').addEventListener('change',async e=>{
     const incoming=JSON.parse(await file.text());
     const valid= incoming&&typeof incoming==='object'&&!Array.isArray(incoming)
       &&Array.isArray(incoming.tasks)&&incoming.tasks.every(x=>x&&typeof x.text==='string'&&typeof x.done==='boolean')
-      &&Array.isArray(incoming.appointments)&&incoming.appointments.every(x=>x&&typeof x.title==='string'&&typeof x.date==='string'&&typeof x.time==='string')
+      &&Array.isArray(incoming.appointments)&&incoming.appointments.every(x=>x&&typeof x.title==='string'&&x.title.length<=120&&typeof x.date==='string'&&/^\\d{4}-\\d{2}-\\d{2}$/.test(x.date)&&!Number.isNaN(Date.parse(x.date+'T00:00:00'))&&typeof x.time==='string'&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(x.time))
       &&Array.isArray(incoming.goals)&&incoming.goals.length===3&&incoming.goals.every(x=>typeof x==='boolean')
       &&typeof incoming.diary==='string'&&typeof incoming.mood==='string'
       &&(incoming.drawing===''||(typeof incoming.drawing==='string'&&incoming.drawing.startsWith('data:image/png;base64,')))
