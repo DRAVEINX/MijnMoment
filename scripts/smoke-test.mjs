@@ -17,3 +17,7 @@ console.log('MijnMoment smoke-tests: alles geslaagd.');
 
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
 assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
+
+assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=true)"),'Terugknop moet alle functievakken verbergen');
+assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
+assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=s!==section)"),'Navigatie moet precies één functievak tonen');
