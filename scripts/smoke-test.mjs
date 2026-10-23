@@ -104,3 +104,6 @@ assert.ok(js.includes("file.size>5*1024*1024"),'Import moet extreem grote back-u
 assert.ok(js.includes('Deze back-up is ongeldig of niet van MijnMoment. Je gegevens zijn niet gewijzigd.'),'Ongeldige back-ups mogen bestaande gegevens niet wijzigen');
 assert.ok(js.includes('Een back-up terugzetten vervangt de huidige gegevens op dit apparaat.'),'Terugzetten moet vooraf waarschuwen voor vervangen van gegevens');
 assert.ok(js.includes("if(!persist()){data=previous;$('#settings-status').textContent='Terugzetten is niet gelukt. Je huidige gegevens zijn behouden.';return;}"),'Bij opslagfout moet import de huidige gegevens herstellen');
+
+assert.ok(js.includes("/^\\\\d{4}-\\\\d{2}-\\\\d{2}$/.test(x.date)"),'Back-upimport moet afspraakdatums controleren');
+assert.ok(js.includes("/^([01]\\\\d|2[0-3]):[0-5]\\\\d$/.test(x.time)"),'Back-upimport moet geldige 24-uurs tijden controleren');
