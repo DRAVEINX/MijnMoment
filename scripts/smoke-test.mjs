@@ -78,4 +78,5 @@ assert.ok(js.includes("$('#diary').value='';ctx.clearRect(0,0,canvas.width,canva
 assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))"),'Gekozen gevoel moet met aria-pressed toegankelijk worden aangegeven');
 const cssForMood=readFileSync('styles.css','utf8');
 assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
+assert.ok(css.includes('progress::-webkit-progress-value')&&css.includes('progress::-moz-progress-bar'),'Voortgangsbalk moet op gangbare browsers duidelijk zichtbaar zijn');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
