@@ -54,6 +54,7 @@ assert.ok(html.includes('id="goals-status" aria-live="polite"'),'Kleine stapjes 
 assert.ok(html.includes('<progress id="goals-progress" max="3" value="0">'),'Kleine stapjes moeten een visuele voortgangsbalk hebben');
 assert.ok(js.includes("progress.value=checked"),'Voortgangsbalk moet meebewegen met afgevinkte stapjes');
 assert.ok(js.includes('function updateGoalsStatus()'),'Voortgang van kleine stapjes moet worden bijgewerkt');
+assert.ok(js.includes("$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();"),'Voortgangsbalk moet na het verwijderen van gegevens worden teruggezet');
 assert.ok(js.includes('Goed bezig! Je hebt ${checked} van de ${total} stapjes afgevinkt.'),'Voortgang moet tonen hoeveel stapjes zijn afgevinkt');
 assert.ok(js.includes("status.textContent='Voorlezen is klaar.'"),'Voorlezen moet een eindmelding geven');
 assert.ok(js.includes("$('#speech-status').textContent='De tekst is gewist.'"),'Wissen moet een statusmelding geven');
