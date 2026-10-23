@@ -19,17 +19,23 @@ assert.equal(ids.length,new Set(ids).size,'HTML mag geen dubbele id-attributen b
 const referencedIds=[...js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g)].map(match=>match[1]);
 for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
 assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
-console.log('MijnMoment smoke-tests: alles geslaagd.');
-
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
 assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
 
 assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=true)"),'Terugknop moet alle functievakken verbergen');
 assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
-assert.ok(js.includes("$$( '.feature' ).forEach(s=>s.hidden=s!==section)".replaceAll(" ", "")),'Navigatie moet precies één functievak tonen');
+assert.ok(js.includes("$('.feature').forEach(s=>s.hidden=s!==section)"),'Navigatie moet precies één functievak tonen');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('Gratis voor iedereen')&&html.includes('Geen begeleidersportaal'),'App moet gratis zijn en geen begeleidersportaal tonen');
+
+const sw=readFileSync('sw.js','utf8');
+assert.ok(sw.includes("self.skipWaiting()"),'Nieuwe serviceworker moet direct kunnen activeren');
+assert.ok(sw.includes("self.clients.claim()"),'Nieuwe serviceworker moet bestaande pagina’s overnemen');
+assert.ok(sw.includes("fetch(request)"),'Online bestanden moeten eerst vernieuwd worden');
+assert.ok(sw.includes("caches.match(request)"),'Offline bestanden moeten uit de cache beschikbaar blijven');
+assert.ok(sw.includes("request.mode === 'navigate'"),'Offline navigatie moet naar de startpagina kunnen terugvallen');
+console.log('MijnMoment smoke-tests: alles geslaagd.');
