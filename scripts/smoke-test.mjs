@@ -24,7 +24,7 @@ assert.ok(html.includes('id="task-status" aria-live="polite"'),'Taakstatus moet 
 assert.ok(js.includes("$('#task-status').textContent=saved?'Taak toegevoegd en opgeslagen: '+text:'Taak toegevoegd, maar niet opgeslagen."),'Nieuwe taak moet een eerlijke opslagstatus tonen');
 assert.ok(js.includes("'Taak verwijderd: '+removed.text"),'Verwijderen van taak moet een bevestiging tonen');
 assert.ok(html.includes('id="drawing-status" aria-live="polite"'),'Tekeningstatus moet toegankelijk worden aangekondigd');
-assert.ok(js.includes("$('#drawing-status').textContent='Je tekening is gewist.'"),'Wissen van tekening moet een bevestiging tonen');
+assert.ok(js.includes("$('#drawing-status').textContent=saved?'Je tekening is gewist.':'Je tekening is van het scherm gewist, maar het opslaan van deze wijziging is mislukt.'"),'Wissen van tekening moet een bevestiging tonen en opslagfouten eerlijk melden');
 assert.ok(js.includes("$('#drawing-status').textContent='Je tekening wordt gedownload als PNG.'"),'Downloaden van tekening moet een bevestiging tonen');
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
 assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
