@@ -28,6 +28,10 @@ jobs:
         run: npx cap add android
       - name: Set Android 16 target SDK
         run: sed -i 's/compileSdkVersion = 35/compileSdkVersion = 36/; s/targetSdkVersion = 35/targetSdkVersion = 36/' android/variables.gradle
+      - name: Verify Android SDK configuration
+        run: |
+          grep -Eq 'compileSdkVersion[[:space:]]*=[[:space:]]*36' android/variables.gradle
+          grep -Eq 'targetSdkVersion[[:space:]]*=[[:space:]]*36' android/variables.gradle
       - name: Sync web assets
         run: npx cap sync android
       - name: Build debug APK
