@@ -83,6 +83,7 @@ assert.ok(js.includes("data.drawing=canvas.toDataURL('image/png')"),'Tekeningen 
 assert.ok(js.includes('savedDrawing.src=data.drawing'),'Opgeslagen tekening moet bij opnieuw openen worden teruggezet');
 assert.ok(js.includes("$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);"),'Alle gegevens verwijderen moet ook dagboek, communicatie-invoer en lopend voorlezen wissen');
 assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))"),'Gekozen gevoel moet met aria-pressed toegankelijk worden aangegeven');
+assert.ok(js.includes("if(!saved)$('#mood-status').textContent='Je koos: '+data.mood+'. Let op: deze keuze kon niet worden opgeslagen op dit apparaat.'"),'Gevoel moet waarschuwen als lokaal opslaan mislukt');
 const cssForMood=readFileSync('styles.css','utf8');
 assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
 assert.ok(css.includes('select:focus-visible')&&css.includes('input[type=checkbox]:focus-visible')&&css.includes('a:focus-visible'),'Selectievakken, checkboxes en links moeten zichtbare toetsenbordfocus hebben');
