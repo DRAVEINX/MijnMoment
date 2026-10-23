@@ -46,6 +46,35 @@ if(typeof data.drawing==='string'&&data.drawing.startsWith('data:image/png;base6
 $('#clear-drawing').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);data.drawing='';const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.':'Je tekening is van het scherm gewist, maar het opslaan van deze wijziging is mislukt.';});
 $('#download-drawing').addEventListener('click',()=>{const a=document.createElement('a');a.download='mijnmoment-tekening.png';a.href=canvas.toDataURL('image/png');a.click();$('#drawing-status').textContent='Je tekening wordt gedownload als PNG.';});
 $('#export-data').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mijnmoment-gegevens.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
+$('#import-data').addEventListener('click',()=>$('#import-file').click());
+$('#import-file').addEventListener('change',async e=>{
+  const file=e.target.files&&e.target.files[0];
+  e.target.value='';
+  if(!file)return;
+  if(file.size>5*1024*1024){$('#settings-status').textContent='Dit back-upbestand is te groot (maximaal 5 MB).';return;}
+  try{
+    const incoming=JSON.parse(await file.text());
+    const valid= incoming&&typeof incoming==='object'&&!Array.isArray(incoming)
+      &&Array.isArray(incoming.tasks)&&incoming.tasks.every(x=>x&&typeof x.text==='string'&&typeof x.done==='boolean')
+      &&Array.isArray(incoming.appointments)&&incoming.appointments.every(x=>x&&typeof x.title==='string'&&typeof x.date==='string'&&typeof x.time==='string')
+      &&Array.isArray(incoming.goals)&&incoming.goals.length===3&&incoming.goals.every(x=>typeof x==='boolean')
+      &&typeof incoming.diary==='string'&&typeof incoming.mood==='string'
+      &&(incoming.drawing===''||(typeof incoming.drawing==='string'&&incoming.drawing.startsWith('data:image/png;base64,')))
+      &&(incoming.fontScale===undefined||Number.isFinite(Number(incoming.fontScale)))
+      &&(incoming.highContrast===undefined||typeof incoming.highContrast==='boolean');
+    if(!valid){$('#settings-status').textContent='Deze back-up is ongeldig of niet van MijnMoment. Je gegevens zijn niet gewijzigd.';return;}
+    if(!confirm('Een back-up terugzetten vervangt de huidige gegevens op dit apparaat. Download eerst een back-up als je niets wilt verliezen. Doorgaan?'))return;
+    const previous=data;
+    data={...defaults,...incoming,fontScale:Math.max(.85,Math.min(1.5,Number(incoming.fontScale??1))),highContrast:incoming.highContrast===true};
+    if(!persist()){data=previous;$('#settings-status').textContent='Terugzetten is niet gelukt. Je huidige gegevens zijn behouden.';return;}
+    $('#diary').value=data.diary;$('#say-text').value='';
+    $('.checklist input[type=checkbox]').forEach((cb,i)=>cb.checked=!!data.goals[i]);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(data.drawing){const restored=new Image();restored.onload=()=>ctx.drawImage(restored,0,0,canvas.width,canvas.height);restored.src=data.drawing;}
+    renderTasks();renderAppointments();showMood();applyDisplaySettings();
+    $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
+  }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
+});
 $('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();applyDisplaySettings();
 if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
