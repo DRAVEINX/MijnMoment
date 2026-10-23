@@ -19,10 +19,12 @@ jobs:
         run: node --check app.js
       - name: Run smoke tests
         run: node scripts/smoke-test.mjs
-      - name: Check required project files
-        run: test -f index.html && test -f styles.css && test -f app.js && test -f manifest.webmanifest && test -f assets/mijnmoment-icon.svg
-      - name: Package web app
-        run: mkdir -p dist && cp index.html styles.css app.js manifest.webmanifest sw.js dist/ && cp -r assets dist/assets
+      - name: Validate package and Capacitor configuration
+        run: node -e "const p=require('./package.json');const c=require('./capacitor.config.json');if(!p.scripts['build:web']||c.appId!=='nl.draveinx.mijnmoment')process.exit(1)"
+      - name: Build web app
+        run: npm run build:web
+      - name: Check required build files
+        run: test -f dist/index.html && test -f dist/styles.css && test -f dist/app.js && test -f dist/manifest.webmanifest && test -f dist/assets/mijnmoment-icon.svg
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
         with:
