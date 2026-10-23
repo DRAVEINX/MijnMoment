@@ -8,6 +8,7 @@ for (const feature of ['localStorage','appointment-form','appointment-list','con
 const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 assert.equal(manifest.name,'MijnMoment');
 assert.equal(manifest.display,'standalone');
+assert.equal((html.match(/class="panel feature" hidden/g)||[]).length,7,'Alle zeven functies moeten standaard verborgen zijn op het startscherm');
 const capacitor=JSON.parse(readFileSync('capacitor.config.json','utf8'));
 assert.equal(capacitor.appId,'nl.draveinx.mijnmoment');
 assert.equal(capacitor.webDir,'dist');
