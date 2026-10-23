@@ -19,6 +19,9 @@ assert.equal(ids.length,new Set(ids).size,'HTML mag geen dubbele id-attributen b
 const referencedIds=[...js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g)].map(match=>match[1]);
 for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
 assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
+assert.ok(html.includes('id="task-status" aria-live="polite"'),'Taakstatus moet toegankelijk worden aangekondigd');
+assert.ok(js.includes("$('#task-status').textContent='Taak toegevoegd: '+text"),'Nieuwe taak moet een bevestiging tonen');
+assert.ok(js.includes("'Taak verwijderd: '+removed.text"),'Verwijderen van taak moet een bevestiging tonen');
 assert.ok(html.includes('id="drawing-status" aria-live="polite"'),'Tekeningstatus moet toegankelijk worden aangekondigd');
 assert.ok(js.includes("$('#drawing-status').textContent='Je tekening is gewist.'"),'Wissen van tekening moet een bevestiging tonen');
 assert.ok(js.includes("$('#drawing-status').textContent='Je tekening wordt gedownload als PNG.'"),'Downloaden van tekening moet een bevestiging tonen');
