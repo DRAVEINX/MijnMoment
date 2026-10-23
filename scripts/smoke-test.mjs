@@ -41,6 +41,7 @@ assert.ok(js.includes("'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe a
 assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
 assert.ok(js.includes("if(!text){$('#task-status').textContent='Vul eerst in wat je wilt doen.';$('#task').focus();return;}"),'Lege taak moet een duidelijke uitleg geven en de invoer focussen');
+assert.ok(js.includes("$('#task').value='';$('#task').focus();"),'Na het toevoegen van een taak moet de invoer klaarstaan voor de volgende taak');
 assert.ok(js.includes('Je hebt nog geen taken. Voeg hierboven je eerste taak toe.'),'Lege takenlijst moet uitleg tonen');
 assert.ok(js.includes('Je hebt nog geen afspraken. Voeg hierboven een afspraak toe.'),'Lege afsprakenlijst moet uitleg tonen');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
