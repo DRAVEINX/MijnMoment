@@ -32,7 +32,9 @@ $('#font-smaller').addEventListener('click',()=>{data.fontScale=Math.max(.85,Mat
 $('#font-larger').addEventListener('click',()=>{data.fontScale=Math.min(1.5,Math.round(((Number(data.fontScale)||1)+.1)*100)/100);persist();applyDisplaySettings();});
 $('#contrast-toggle').addEventListener('click',()=>{data.highContrast=!data.highContrast;persist();applyDisplaySettings();});
 const goalLabels=['Ik neem een rustmoment','Ik drink wat water','Ik doe iets wat ik leuk vind'];
-$$('.checklist input[type=checkbox]').forEach((cb,i)=>{cb.checked=!!data.goals[i];cb.addEventListener('change',()=>{data.goals[i]=cb.checked;persist();});});
+function updateGoalsStatus(){const checked=data.goals.filter(Boolean).length,total=$('.checklist input[type=checkbox]').length;const status=$('#goals-status');if(!status)return;status.textContent=checked===0?'Je hebt nog geen stapjes afgevinkt.':checked===total?'Geweldig! Je hebt alle drie de stapjes afgevinkt.':`Goed bezig! Je hebt ${checked} van de ${total} stapjes afgevinkt.`;}
+$('.checklist input[type=checkbox]').forEach((cb,i)=>{cb.checked=!!data.goals[i];cb.addEventListener('change',()=>{data.goals[i]=cb.checked;persist();updateGoalsStatus();});});
+updateGoalsStatus();
 const canvas=$('#drawing'),ctx=canvas.getContext('2d');ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#2874c8';let drawing=false;
 function pos(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};}
 canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
