@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const key='mijnmoment-data-v2';
-const defaults={tasks:[],appointments:[],mood:'',diary:'',goals:[false,false,false],fontScale:1,highContrast:false};
+const defaults={tasks:[],appointments:[],mood:'',diary:'',drawing:'',goals:[false,false,false],fontScale:1,highContrast:false};
 let data={...defaults};
 try{const saved=JSON.parse(localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'{}');data={...defaults,...saved};}catch{}
 if(!Array.isArray(data.tasks))data.tasks=[];
@@ -37,8 +37,10 @@ const canvas=$('#drawing'),ctx=canvas.getContext('2d');ctx.lineWidth=5;ctx.lineC
 function pos(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};}
 canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
 canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
-['pointerup','pointercancel','lostpointercapture'].forEach(n=>canvas.addEventListener(n,()=>drawing=false));
-$('#clear-drawing').addEventListener('click',()=>ctx.clearRect(0,0,canvas.width,canvas.height));
+function saveDrawing(){try{data.drawing=canvas.toDataURL('image/png');persist();}catch{$('#settings-status').textContent='De tekening kon niet worden opgeslagen. Maak ruimte vrij op je apparaat.';}}
+['pointerup','pointercancel','lostpointercapture'].forEach(n=>canvas.addEventListener(n,()=>{if(drawing){drawing=false;saveDrawing();}}));
+if(typeof data.drawing==='string'&&data.drawing.startsWith('data:image/png;base64,')){const savedDrawing=new Image();savedDrawing.onload=()=>ctx.drawImage(savedDrawing,0,0,canvas.width,canvas.height);savedDrawing.src=data.drawing;}
+$('#clear-drawing').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);data.drawing='';persist();});
 $('#download-drawing').addEventListener('click',()=>{const a=document.createElement('a');a.download='mijnmoment-tekening.png';a.href=canvas.toDataURL('image/png');a.click();});
 $('#export-data').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mijnmoment-gegevens.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
 $('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
