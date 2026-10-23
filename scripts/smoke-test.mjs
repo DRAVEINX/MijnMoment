@@ -92,3 +92,9 @@ assert.ok(css.includes('.high-contrast progress::-webkit-progress-value')&&css.i
 assert.ok(css.includes('.high-contrast button{background:#000!important;color:#fff!important;')&&css.includes('.high-contrast button.secondary{background:#fff!important;color:#000!important;'),'Knoppen moeten in hoog contrast duidelijke tekst en achtergrond hebben');
 assert.ok(css.includes('.high-contrast button:focus-visible')&&css.includes('outline:4px solid #000'),'Toetsenbordfocus moet in hoog contrast extra duidelijk zijn');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
+
+assert.ok(js.includes("if(!saved)$('#goals-status').textContent='Je stapje is aangepast, maar niet opgeslagen."),'Stapjes moeten eerlijk melden als lokaal opslaan mislukt');
+assert.ok(js.includes("if(!saved)$('#display-status').textContent='Tekstgrootte aangepast, maar niet opgeslagen."),'Tekstgrootte moet opslagfouten melden');
+assert.ok(js.includes("if(!saved)$('#display-status').textContent='Contrast aangepast, maar niet opgeslagen."),'Hoog contrast moet opslagfouten melden');
+assert.ok(js.includes("if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen."),'Tekening moet opslagfouten melden');
+assert.ok(js.includes("const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.'"),'Tekening wissen mag geen succesvolle opslag claimen als opslaan mislukt');
