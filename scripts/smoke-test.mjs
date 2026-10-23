@@ -50,6 +50,9 @@ assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een onde
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
+assert.ok(html.includes('id="goals-status" aria-live="polite"'),'Kleine stapjes moeten een toegankelijke voortgangsmelding hebben');
+assert.ok(js.includes('function updateGoalsStatus()'),'Voortgang van kleine stapjes moet worden bijgewerkt');
+assert.ok(js.includes('Goed bezig! Je hebt ${checked} van de ${total} stapjes afgevinkt.'),'Voortgang moet tonen hoeveel stapjes zijn afgevinkt');
 assert.ok(js.includes("status.textContent='Voorlezen is klaar.'"),'Voorlezen moet een eindmelding geven');
 assert.ok(js.includes("$('#speech-status').textContent='De tekst is gewist.'"),'Wissen moet een statusmelding geven');
 assert.ok(html.includes('Gratis voor iedereen')&&html.includes('Geen begeleidersportaal'),'App moet gratis zijn en geen begeleidersportaal tonen');
