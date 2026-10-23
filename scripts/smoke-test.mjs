@@ -79,4 +79,5 @@ assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===dat
 const cssForMood=readFileSync('styles.css','utf8');
 assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
 assert.ok(css.includes('progress::-webkit-progress-value')&&css.includes('progress::-moz-progress-bar'),'Voortgangsbalk moet op gangbare browsers duidelijk zichtbaar zijn');
+assert.ok(css.includes('.high-contrast progress::-webkit-progress-value')&&css.includes('.high-contrast progress::-moz-progress-bar'),'Voortgangsbalk moet ook in hoog contrast duidelijk zichtbaar zijn');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
