@@ -51,6 +51,8 @@ assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bove
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
 assert.ok(html.includes('<label for="say-text">Wat wil je zeggen?</label>'),'Communicatie-invoer moet een zichtbaar label hebben');
+for(const id of ['speak','clear-speech','clear-drawing','download-drawing','export-data','delete-data']) assert.ok(html.includes(`id="${id}"`) && new RegExp(`<button\\b(?=[^>]*\\bid="${id}")(?=[^>]*\\btype="button")`).test(html),`Actieknop ${id} moet type=button hebben`);
+for(const phrase of ['Ik heb even rust nodig.','Kun je mij helpen?','Ik begrijp het niet.']) assert.ok(html.includes(`<button type="button" data-phrase="${phrase}">`),`Communicatiezin ${phrase} mag geen formulier verzenden`);
 assert.ok(html.includes('id="goals-status" aria-live="polite"'),'Kleine stapjes moeten een toegankelijke voortgangsmelding hebben');
 assert.ok(html.includes('<progress id="goals-progress" max="3" value="0">'),'Kleine stapjes moeten een visuele voortgangsbalk hebben');
 assert.ok(js.includes("progress.value=checked"),'Voortgangsbalk moet meebewegen met afgevinkte stapjes');
