@@ -45,4 +45,6 @@ assert.ok(sw.includes("self.clients.claim()"),'Nieuwe serviceworker moet bestaan
 assert.ok(sw.includes("fetch(request)"),'Online bestanden moeten eerst vernieuwd worden');
 assert.ok(sw.includes("caches.match(request)"),'Offline bestanden moeten uit de cache beschikbaar blijven');
 assert.ok(sw.includes("request.mode === 'navigate'"),'Offline navigatie moet naar de startpagina kunnen terugvallen');
+assert.ok(js.includes("data.drawing=canvas.toDataURL('image/png')"),'Tekeningen moeten lokaal worden bewaard');
+assert.ok(js.includes('savedDrawing.src=data.drawing'),'Opgeslagen tekening moet bij opnieuw openen worden teruggezet');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
