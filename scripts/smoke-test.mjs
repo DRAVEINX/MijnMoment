@@ -14,9 +14,9 @@ assert.equal(capacitor.appId,'nl.draveinx.mijnmoment');
 assert.equal(capacitor.webDir,'dist');
 assert.ok(readFileSync('app.js','utf8').includes("padStart(2,'0')"),'Datumveld moet een stabiele ISO-datum gebruiken');
 
-const ids=[...html.matchAll(/\\bid="([^"]+)"/g)].map(match=>match[1]);
+const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
 assert.equal(ids.length,new Set(ids).size,'HTML mag geen dubbele id-attributen bevatten');
-const referencedIds=[...js.matchAll(/\\$\\('#([a-zA-Z0-9_-]+)'\\)/g)].map(match=>match[1]);
+const referencedIds=[...js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g)].map(match=>match[1]);
 for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
 assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
@@ -26,7 +26,7 @@ assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet ee
 
 assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=true)"),'Terugknop moet alle functievakken verbergen');
 assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
-assert.ok(js.includes("$('.feature').forEach(s=>s.hidden=s!==section)"),'Navigatie moet precies één functievak tonen');
+assert.ok(js.includes("$$( '.feature' ).forEach(s=>s.hidden=s!==section)".replaceAll(" ", "")),'Navigatie moet precies één functievak tonen');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
