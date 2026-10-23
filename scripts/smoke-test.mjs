@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
 for (const file of ['index.html','styles.css','app.js','manifest.webmanifest','sw.js','assets/mijnmoment-icon.svg']) assert.ok(existsSync(file),`Bestand ontbreekt: ${file}`);
 const html=readFileSync('index.html','utf8');
-for (const feature of ['MijnMoment','planning','afspraken','communicatie','dagboek','tekenen','doelen','instellingen','dictate-diary','font-larger','contrast-toggle']) assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
+for (const feature of ['MijnMoment','planning','afspraken','communicatie','dagboek','tekenen','doelen','instellingen','gevoelens','section-intro','tile-icon','site-footer','dictate-diary','font-larger','contrast-toggle']) assert.ok(html.includes(feature),`HTML mist functie: ${feature}`);
 const js=readFileSync('app.js','utf8');
 for (const feature of ['localStorage','appointment-form','appointment-list','conflict','speechSynthesis','download-drawing','SpeechRecognition','highContrast','fontScale']) assert.ok(js.includes(feature),`JavaScript mist functie of controle: ${feature}`);
 const manifest=JSON.parse(readFileSync('manifest.webmanifest','utf8'));
@@ -31,6 +31,12 @@ assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een onde
 assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('Gratis voor iedereen')&&html.includes('Geen begeleidersportaal'),'App moet gratis zijn en geen begeleidersportaal tonen');
+for (const target of [...html.matchAll(/data-target="([^"]+)"/g)].map(m=>m[1])) {
+  assert.ok(ids.includes(target), `Dashboardknop verwijst naar ontbrekend onderdeel: #${target}`);
+}
+assert.ok(html.includes('data-target="gevoelens"') && html.includes('id="gevoelens"'),'Gevoelensknop moet naar het gevoelensgedeelte gaan');
+const css=readFileSync('styles.css','utf8');
+for (const selector of ['.hero-inner','.tile-icon','.footer-points','.tile-purple','.tile-pink','@media(max-width:520px)']) assert.ok(css.includes(selector), `Vormgeving mist responsive onderdeel: ${selector}`);
 
 const sw=readFileSync('sw.js','utf8');
 assert.ok(sw.includes("self.skipWaiting()"),'Nieuwe serviceworker moet direct kunnen activeren');
