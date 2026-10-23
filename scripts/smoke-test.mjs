@@ -48,4 +48,6 @@ assert.ok(sw.includes("request.mode === 'navigate'"),'Offline navigatie moet naa
 assert.ok(js.includes("data.drawing=canvas.toDataURL('image/png')"),'Tekeningen moeten lokaal worden bewaard');
 assert.ok(js.includes('savedDrawing.src=data.drawing'),'Opgeslagen tekening moet bij opnieuw openen worden teruggezet');
 assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))"),'Gekozen gevoel moet met aria-pressed toegankelijk worden aangegeven');
+const cssForMood=readFileSync('styles.css','utf8');
+assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
