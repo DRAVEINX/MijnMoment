@@ -212,3 +212,7 @@ assert.ok(js.indexOf("const removed=data.tasks.splice(i,1)[0]")>js.indexOf("make
 assert.ok(js.includes("if(task.done)li.append(makeButton('Opnieuw doen'"),'Opnieuw doen verschijnt alleen bij afgeronde taken');
 assert.ok(js.includes("task.done=false;"),'Opnieuw doen zet de taak weer open');
 assert.ok(js.includes("if(!persist()){task.done=true"),'Opnieuw doen herstelt status bij opslagfout');
+
+for(const id of ['task-done-count','task-open-count','task-progress-percent','task-progress-bar'])assert.ok(planningHtml.includes('id="'+id+'"'),'Voortgang mist '+id);
+assert.ok(js.includes('data.tasks.length?Math.round(doneCount/data.tasks.length*100):0'),'Voortgang moet nul taken veilig afhandelen');
+assert.ok(js.includes("$('#task-progress-bar').value=percent"),'Voortgangsbalk moet worden bijgewerkt');
