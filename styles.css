@@ -34,3 +34,6 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 /* Rustige dagafsluiting, zonder animaties of geluid. */
 .today-finished:not([hidden]){padding:16px;margin:12px 0 20px;border:2px solid currentColor;border-radius:16px;background:rgba(128,128,128,.08)}
 .today-finished h3{margin:0 0 10px}.today-finished p{margin:8px 0;line-height:1.6}
+
+/* Veilige nieuwe-dagactie: duidelijke knop, geen afleidende effecten. */
+.new-day-start{margin:14px 0 18px}.new-day-start button{width:100%;min-height:58px;font-size:1.1em;font-weight:700}.new-day-start p:not([hidden]){padding:12px;margin:10px 0;border:2px solid currentColor;border-radius:12px;line-height:1.6}
