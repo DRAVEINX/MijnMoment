@@ -226,3 +226,8 @@ assert.ok(js.includes("$('#today-home-button').addEventListener('click',()=>{tas
 
 assert.ok(planningHtml.includes('id="today-finished"')&&planningHtml.includes('Goed gedaan vandaag!'),'Dagafsluiting moet aanwezig en standaard verborgen zijn');
 assert.ok(js.includes("todayTasks.length>0&&remaining===0"),'Dagafsluiting alleen bij minstens één voltooide taak van vandaag');
+
+for(const id of ['new-day-button','new-day-message'])assert.ok(planningHtml.includes('id="'+id+'"'),'Nieuwe dag mist '+id);
+const newDayHandler=js.slice(js.indexOf("$('#new-day-button').addEventListener"),js.indexOf("$('#today-home-button').addEventListener"));
+assert.ok(newDayHandler.includes("taskFilter='today'")&&newDayHandler.includes("$('#task-date').value=localDateISO()"),'Nieuwe dag moet Vandaag selecteren');
+assert.ok(!newDayHandler.includes('data.tasks')&&!newDayHandler.includes('persist()'),'Nieuwe dag mag opgeslagen taken niet wijzigen');
