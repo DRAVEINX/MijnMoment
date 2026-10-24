@@ -132,3 +132,8 @@ assert.ok(js.includes('Verwijderen is niet gelukt. De taak is behouden.'),'Bij e
 
 assert.ok(js.includes('const previousAppointments=data.appointments;data.appointments=data.appointments.filter(a=>a.id!==item.id);if(!persist()){data.appointments=previousAppointments;'),'Bij opslagfout moet een verwijderde afspraak terugkomen');
 assert.ok(js.includes('Verwijderen is niet gelukt. De afspraak is behouden.'),'Bij mislukte afspraakverwijdering moet een duidelijke foutmelding verschijnen');
+
+assert.ok(js.includes("if(!persist()){data.tasks.pop();renderTasks();"),'Mislukte taaktoevoeging mag geen niet-opgeslagen taak laten staan');
+assert.ok(js.includes('Taak niet opgeslagen. Je tekst blijft staan.'),'Bij mislukte taaktoevoeging moet invoer behouden blijven');
+assert.ok(js.includes("if(!persist()){data.appointments.pop();renderAppointments();"),'Mislukte afspraaktoevoeging mag geen niet-opgeslagen afspraak laten staan');
+assert.ok(js.includes('Afspraak niet opgeslagen. Je gegevens blijven staan.'),'Bij mislukte afspraaktoevoeging moet invoer behouden blijven');
