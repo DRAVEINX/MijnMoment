@@ -172,3 +172,5 @@ assert.ok(readFileSync('styles.css','utf8').includes('[hidden]{display:none!impo
 
 assert.ok(js.includes("document.title=home?'MijnMoment'"),'Schermtitel moet meeveranderen met het gekozen onderdeel');
 assert.ok(js.includes("heading.focus({preventScroll:true})"),'Nieuw scherm moet focus geven aan de kop voor toegankelijkheid');
+
+assert.ok(js.includes('localStorage.getItem(key)!==serialized'),'Na opslaan moet MijnMoment de gegevens direct kunnen teruglezen');
