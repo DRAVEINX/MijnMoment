@@ -216,3 +216,7 @@ assert.ok(js.includes("if(!persist()){task.done=true"),'Opnieuw doen herstelt st
 for(const id of ['task-done-count','task-open-count','task-progress-percent','task-progress-bar'])assert.ok(planningHtml.includes('id="'+id+'"'),'Voortgang mist '+id);
 assert.ok(js.includes('data.tasks.length?Math.round(doneCount/data.tasks.length*100):0'),'Voortgang moet nul taken veilig afhandelen');
 assert.ok(js.includes("$('#task-progress-bar').value=percent"),'Voortgangsbalk moet worden bijgewerkt');
+
+for(const id of ['today-reminder-title','today-reminder-message'])assert.ok(planningHtml.includes('id="'+id+'"'),'Vandaag-herinnering mist '+id);
+assert.ok(js.includes('task.date===localDateISO()'),'Vandaag-herinnering telt alleen taken van vandaag');
+assert.ok(js.includes('function updateTodayReminder()'),'Vandaag-herinnering wordt bijgewerkt');
