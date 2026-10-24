@@ -185,3 +185,8 @@ assert.ok(!js.includes("total=$('.checklist input[type=checkbox]').length"),'Voo
 
 assert.ok(js.includes('nativeStorage.set({key,value}).then(()=>nativeStorage.get({key}))'),'Android moet opgeslagen gegevens teruglezen ter controle');
 assert.ok(js.includes('Opslaan: gelukt')&&js.includes('Opslaan: mislukt'),'Opslagstatus moet zichtbaar zijn');
+
+assert.ok(js.includes("let taskFilter='all'"),'Planning heeft een takenfilter');
+assert.ok(js.includes("$('#task-summary').textContent"),'Planning toont aantallen openstaande en afgeronde taken');
+const planningHtml=readFileSync('index.html','utf8');
+for(const id of ['tasks-all','tasks-open','tasks-done','task-summary'])assert.ok(planningHtml.includes('id="'+id+'"'),'Planning mist '+id);
