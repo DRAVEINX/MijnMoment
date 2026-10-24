@@ -86,7 +86,19 @@ function renderWeek(){
         form.addEventListener('submit',event=>{event.preventDefault();const newText=nameInput.value.trim();if(!newText){nameInput.focus();return;}const previous={text:task.text,date:task.date};task.text=newText;task.date=dateInput.value;if(!persist()){task.text=previous.text;task.date=previous.date;$('#task-status').textContent='Aanpassen is niet opgeslagen. De oude taak is behouden.';renderTasks();return;}$('#task-status').textContent='Taak aangepast en opgeslagen: '+newText;renderTasks();});
         item.replaceChildren(form);nameInput.focus();
       });
-      editButton.classList.add('week-edit-task');item.append(taskText,editButton);list.append(item);
+      const toggleButton=makeButton(task.done?'↩️ Opnieuw doen':'✅ Taak afvinken','secondary',()=>{
+        const previousDone=task.done;
+        task.done=!previousDone;
+        if(!persist()){
+          task.done=previousDone;
+          $('#task-status').textContent='Wijziging niet opgeslagen. De vorige taakstatus is behouden.';
+          renderTasks();return;
+        }
+        $('#task-status').textContent=task.done?'Taak afgevinkt: '+task.text:'Taak opnieuw geopend: '+task.text;
+        renderTasks();
+      });
+      toggleButton.classList.add('week-toggle-task');
+      editButton.classList.add('week-edit-task');item.append(taskText,toggleButton,editButton);list.append(item);
     }card.append(list);}
     const addButton=makeButton('➕ Taak toevoegen aan '+title.toLowerCase(),'secondary',()=>{
       $('#task-date').value=date;
