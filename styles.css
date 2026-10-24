@@ -58,3 +58,6 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 
 /* Grote knoppen om alle weekdagen tegelijk te openen of sluiten. */
 .week-all-actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.week-all-actions button{flex:1 1 180px;min-height:48px;font-weight:700}
+
+/* Rustig zoekveld voor taken in Mijn week. */
+.week-search{margin:14px 0}.week-search label{display:block;font-weight:700;margin-bottom:8px}.week-search-row{display:flex;flex-wrap:wrap;gap:10px}.week-search-row input{flex:2 1 210px;min-height:48px}.week-search-row button{flex:1 1 170px;min-height:48px}.week-search-status{min-height:1em}
