@@ -186,7 +186,7 @@ assert.ok(!js.includes("total=$('.checklist input[type=checkbox]').length"),'Voo
 assert.ok(js.includes('nativeStorage.set({key,value}).then(()=>nativeStorage.get({key}))'),'Android moet opgeslagen gegevens teruglezen ter controle');
 assert.ok(js.includes('Opslaan: gelukt')&&js.includes('Opslaan: mislukt'),'Opslagstatus moet zichtbaar zijn');
 
-assert.ok(js.includes("let taskFilter='all'"),'Planning heeft een takenfilter');
+assert.ok(js.includes("let taskFilter='today'"),'Planning begint met Vandaag');
 assert.ok(js.includes("$('#task-summary').textContent"),'Planning toont aantallen openstaande en afgeronde taken');
 const planningHtml=readFileSync('index.html','utf8');
 for(const id of ['tasks-all','tasks-open','tasks-done','task-summary'])assert.ok(planningHtml.includes('id="'+id+'"'),'Planning mist '+id);
@@ -194,3 +194,8 @@ for(const id of ['tasks-all','tasks-open','tasks-done','task-summary'])assert.ok
 for(const id of ['task-date','task-today','task-tomorrow'])assert.ok(planningHtml.includes('id="'+id+'"'),'Taakdatum mist '+id);
 assert.ok(js.includes("date:$('#task-date').value||''"),'Taakdatum moet worden opgeslagen');
 assert.ok(js.includes('function taskDateLabel(date)'),'Taakdatum moet leesbaar worden weergegeven');
+
+for(const id of ['tasks-today','tasks-tomorrow'])assert.ok(planningHtml.includes('id="'+id+'"'),'Dagoverzicht mist '+id);
+assert.ok(js.includes("task.date!==localDateISO(1)"),'Morgen filtert op de juiste datum');
+assert.ok(js.includes("task.date!==localDateISO()"),'Vandaag filtert op de juiste datum');
+assert.ok(js.includes('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'),'Datumweergave gebruikt geldige datumcontrole');
