@@ -174,3 +174,8 @@ assert.ok(js.includes("document.title=home?'MijnMoment'"),'Schermtitel moet meev
 assert.ok(js.includes("heading.focus({preventScroll:true})"),'Nieuw scherm moet focus geven aan de kop voor toegankelijkheid');
 
 assert.ok(js.includes('localStorage.getItem(key)!==serialized'),'Na opslaan moet MijnMoment de gegevens direct kunnen teruglezen');
+
+assert.ok(js.includes('await nativeStorage.get({key})'),'Android-opslag moet worden gelezen vóór het tonen van gegevens');
+assert.ok(js.includes('nativeStorage.set({key,value})'),'Wijzigingen moeten ook in Android-opslag worden bewaard');
+assert.ok(js.includes('nativeStorage.remove({key})'),'Gegevens verwijderen moet ook Android-opslag wissen');
+assert.ok(JSON.parse(readFileSync('package.json','utf8')).dependencies['@capacitor/preferences'],'Native opslagplugin moet beschikbaar zijn');
