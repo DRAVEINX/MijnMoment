@@ -21,7 +21,7 @@ const referencedIds=[...js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g)].map(match=>ma
 for(const id of referencedIds) assert.ok(ids.includes(id),`JavaScript verwijst naar ontbrekend HTML-element: #${id}`);
 assert.ok(html.includes('aria-live="polite"'),'Statusmeldingen moeten toegankelijk worden aangekondigd');
 assert.ok(html.includes('id="task-status" aria-live="polite"'),'Taakstatus moet toegankelijk worden aangekondigd');
-assert.ok(js.includes("$('#task-status').textContent=saved?'Taak toegevoegd en opgeslagen: '+text:'Taak toegevoegd, maar niet opgeslagen."),'Nieuwe taak moet een eerlijke opslagstatus tonen');
+assert.ok(js.includes("if(!persist()){data.tasks.pop();renderTasks();")&&js.includes("$('#task-status').textContent='Taak toegevoegd en opgeslagen: '+text"),'Nieuwe taak moet alleen succesvolle opslag bevestigen');
 assert.ok(js.includes("'Taak verwijderd: '+removed.text"),'Verwijderen van taak moet een bevestiging tonen');
 assert.ok(html.includes('id="drawing-status" aria-live="polite"'),'Tekeningstatus moet toegankelijk worden aangekondigd');
 assert.ok(js.includes("$('#drawing-status').textContent=saved?'Je tekening is gewist.':'Je tekening is van het scherm gewist, maar het opslaan van deze wijziging is mislukt.'"),'Wissen van tekening moet een bevestiging tonen en opslagfouten eerlijk melden');
@@ -38,7 +38,7 @@ assert.ok(js.includes("if(!title){status.textContent='Vul eerst een naam in voor
 assert.ok(js.includes("$('#appointment-date').min=todayISO"),'Datumkiezer moet afspraken in het verleden blokkeren');
 assert.ok(js.includes("if(date<todayISO){status.textContent='Kies vandaag of een datum in de toekomst voor deze afspraak.';return;}"),'Handmatige invoer van een datum in het verleden moet worden tegengehouden');
 assert.ok(js.includes("if(date===todayISO&&time<currentTime){status.textContent='Dit tijdstip is vandaag al voorbij. Kies een latere tijd.';return;}"),'Een verstreken tijdstip vandaag moet worden tegengehouden');
-assert.ok(js.includes("status.textContent=saved?'Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet alleen succesvolle opslag bevestigen en bij fout waarschuwen');
+assert.ok(js.includes("if(!persist()){data.appointments.pop();renderAppointments();")&&js.includes("status.textContent='Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet alleen succesvolle opslag bevestigen');
 assert.ok(js.includes("$('#appointment-title').value='';$('#appointment-title').focus();"),'Na opslaan van een afspraak moet de naam invoer klaarstaan voor de volgende afspraak');
 assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
 assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
@@ -137,3 +137,6 @@ assert.ok(js.includes("if(!persist()){data.tasks.pop();renderTasks();"),'Mislukt
 assert.ok(js.includes('Taak niet opgeslagen. Je tekst blijft staan.'),'Bij mislukte taaktoevoeging moet invoer behouden blijven');
 assert.ok(js.includes("if(!persist()){data.appointments.pop();renderAppointments();"),'Mislukte afspraaktoevoeging mag geen niet-opgeslagen afspraak laten staan');
 assert.ok(js.includes('Afspraak niet opgeslagen. Je gegevens blijven staan.'),'Bij mislukte afspraaktoevoeging moet invoer behouden blijven');
+
+assert.ok(js.includes('const previousDone=data.tasks[i].done;data.tasks[i].done=cb.checked;if(!persist()){data.tasks[i].done=previousDone;'),'Afvinken moet bij opslagfout de vorige status herstellen');
+assert.ok(js.includes('Afvinken is niet opgeslagen. De vorige status is behouden.'),'Mislukt afvinken moet duidelijk worden gemeld');
