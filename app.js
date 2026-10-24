@@ -99,7 +99,7 @@ function renderWeek(){
     const day=new Date(date+'T12:00:00');
     const title=offset===0?'Vandaag':offset===1?'Morgen':day.toLocaleDateString('nl-NL',{weekday:'long'});
     const card=document.createElement('details');card.className='week-day';card.open=(weekSearchQuery||weekStatusFilter!=='all')?true:openWeekDays.has(date);
-    card.addEventListener('toggle',()=>{if(weekSearchQuery||weekStatusFilter!=='all')return;if(card.open)openWeekDays.add(date);else openWeekDays.delete(date);});
+    card.addEventListener('toggle',()=>{if(!card.isConnected||weekSearchQuery||weekStatusFilter!=='all')return;if(card.open)openWeekDays.add(date);else openWeekDays.delete(date);});
     const dayHeader=document.createElement('summary');dayHeader.className='week-day-header';
     const heading=document.createElement('strong');heading.textContent=title+' · '+day.toLocaleDateString('nl-NL',{day:'numeric',month:'long'});
     const count=document.createElement('span');count.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
