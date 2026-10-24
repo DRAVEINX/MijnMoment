@@ -43,7 +43,9 @@ for(const [id,filter] of [['tasks-today','today'],['tasks-tomorrow','tomorrow'],
   $('#'+id).addEventListener('click',()=>{taskFilter=filter;renderTasks();});
 }
 function updateTodayReminder(){
-  const remaining=data.tasks.filter(task=>!task.done&&task.date===localDateISO()).length;
+  const todayTasks=data.tasks.filter(task=>task.date===localDateISO());
+  const remaining=todayTasks.filter(task=>!task.done).length;
+  $('#today-finished').hidden=!(todayTasks.length>0&&remaining===0);
   const hour=new Date().getHours();
   $('#today-reminder-title').textContent=(hour<12?'☀️ Goedemorgen!':hour<18?'🌤️ Goedemiddag!':'🌙 Goedenavond!');
   $('#today-reminder-message').textContent=remaining===0?'Je hebt geen openstaande taken voor vandaag. Neem rustig je moment. 💚':remaining===1?'Je hebt vandaag nog 1 taak. Neem rustig de tijd. 💚':'Je hebt vandaag nog '+remaining+' taken. Je hoeft niet alles tegelijk te doen. 💚';
