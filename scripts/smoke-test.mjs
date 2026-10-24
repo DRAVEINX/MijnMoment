@@ -155,7 +155,7 @@ assert.ok(sw.includes('event.waitUntil(caches.open(CACHE).then(cache => cache.pu
 assert.ok(sw.includes("caches.match(request, { ignoreSearch: request.mode === 'navigate' })"),'Offline navigatie met queryparameters moet de cache kunnen gebruiken');
 assert.ok(sw.includes("if (request.mode === 'navigate')")&&sw.includes("caches.match('./index.html')"),'Offline navigatie moet terugvallen op de startpagina');
 
-const css=readFileSync('styles.css','utf8');
+
 assert.ok(css.includes('button{min-height:44px}'),'Knoppen moeten voldoende groot zijn om aan te raken');
 assert.ok(css.includes(':focus-visible{outline:3px solid #a85200;outline-offset:4px}'),'Toetsenbordfocus moet duidelijk zichtbaar zijn');
 assert.ok(css.includes('.high-contrast :focus-visible{outline:4px solid #e69b00!important'),'Toetsenbordfocus moet ook in hoog contrast zichtbaar zijn');
