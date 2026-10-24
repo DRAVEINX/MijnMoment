@@ -164,3 +164,8 @@ assert.ok(js.includes("$$('[data-target]').forEach("),'Alle starttegels moeten e
 assert.ok(js.includes("$$('[data-phrase]').forEach("),'Alle communicatiezinnen moeten een klikactie krijgen');
 
 assert.equal([...js.matchAll(/(?<!\$)\$\([^\n)]*\)\.forEach/g)].length,0,'Gebruik querySelectorAll voor collecties; querySelector veroorzaakt een opstartfout');
+
+assert.ok(js.includes('function showScreen(target,updateHistory=true)'),'Elk onderdeel moet een eigen scherm krijgen');
+assert.ok(js.includes("window.addEventListener('popstate'"),'Android-terug moet navigeren tussen schermen');
+assert.ok(js.includes("feelingsBack.classList.add('back-home')"),'Ook Gevoelens moet een terugknop hebben');
+assert.ok(readFileSync('styles.css','utf8').includes('[hidden]{display:none!important}'),'Verborgen schermen mogen niet zichtbaar zijn');
