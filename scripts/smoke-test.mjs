@@ -245,3 +245,7 @@ const weekEdit=js.slice(js.indexOf('function renderWeek()'),js.indexOf('function
 assert.ok(weekEdit.includes("makeButton('✏️ Taak aanpassen'"),'Weektaak moet bewerkknop hebben');
 assert.ok(weekEdit.includes("makeButton('Annuleren'")&&weekEdit.includes("saveButton.textContent='Opslaan'"),'Weektaak moet opslaan en annuleren ondersteunen');
 assert.ok(weekEdit.includes('if(!persist()){task.text=previous.text;task.date=previous.date'),'Weektaak moet wijzigingen terugdraaien bij opslagfout');
+
+assert.ok(weekEdit.includes("makeButton(task.done?'↩️ Opnieuw doen':'✅ Taak afvinken'"),'Weektaak moet afvinken en opnieuw doen ondersteunen');
+assert.ok(weekEdit.includes('task.done=!previousDone'),'Weektaak moet status wisselen');
+assert.ok(weekEdit.includes('if(!persist()){')&&weekEdit.includes('task.done=previousDone'),'Weektaak moet status herstellen bij opslagfout');
