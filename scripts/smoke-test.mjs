@@ -94,8 +94,8 @@ assert.ok(css.includes('.high-contrast button:focus-visible')&&css.includes('out
 console.log('MijnMoment smoke-tests: alles geslaagd.');
 
 assert.ok(js.includes('const previousGoal=data.goals[i];data.goals[i]=cb.checked;if(!persist()){data.goals[i]=previousGoal;cb.checked=previousGoal;updateGoalsStatus();'),'Stapjes moeten bij opslagfout worden teruggedraaid');
-assert.ok(js.includes("if(!saved)$('#display-status').textContent='Tekstgrootte aangepast, maar niet opgeslagen."),'Tekstgrootte moet opslagfouten melden');
-assert.ok(js.includes("if(!saved)$('#display-status').textContent='Contrast aangepast, maar niet opgeslagen."),'Hoog contrast moet opslagfouten melden');
+assert.ok(js.includes('data.fontScale=previousScale;applyDisplaySettings();'),'Tekstgrootte moet bij opslagfout worden hersteld');
+assert.ok(js.includes('data.highContrast=previousContrast;applyDisplaySettings();'),'Contrast moet bij opslagfout worden hersteld');
 assert.ok(js.includes("if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen."),'Tekening moet opslagfouten melden');
 assert.ok(js.includes("const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.'"),'Tekening wissen mag geen succesvolle opslag claimen als opslaan mislukt');
 
@@ -143,3 +143,6 @@ assert.ok(js.includes('Afvinken is niet opgeslagen. De vorige status is behouden
 
 assert.ok(js.includes('Je gevoel kon niet worden opgeslagen. De vorige keuze is behouden.'),'Gevoel moet een duidelijke foutmelding tonen');
 assert.ok(js.includes('Je stapje kon niet worden opgeslagen. De vorige stand is behouden.'),'Doelen moeten een duidelijke foutmelding tonen');
+
+assert.ok(js.includes('Tekstgrootte niet opgeslagen. De vorige instelling is behouden.'),'Tekstgrootte moet een duidelijke foutmelding tonen');
+assert.ok(js.includes('Contrast niet opgeslagen. De vorige instelling is behouden.'),'Contrast moet een duidelijke foutmelding tonen');
