@@ -83,7 +83,7 @@ assert.ok(js.includes("data.drawing=canvas.toDataURL('image/png')"),'Tekeningen 
 assert.ok(js.includes('savedDrawing.src=data.drawing'),'Opgeslagen tekening moet bij opnieuw openen worden teruggezet');
 assert.ok(js.includes("$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);"),'Alle gegevens verwijderen moet ook dagboek, communicatie-invoer en lopend voorlezen wissen');
 assert.ok(js.includes("b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))"),'Gekozen gevoel moet met aria-pressed toegankelijk worden aangegeven');
-assert.ok(js.includes("if(!saved)$('#mood-status').textContent='Je koos: '+data.mood+'. Let op: deze keuze kon niet worden opgeslagen op dit apparaat.'"),'Gevoel moet waarschuwen als lokaal opslaan mislukt');
+assert.ok(js.includes('const previousMood=data.mood;data.mood=b.dataset.mood;if(!persist()){data.mood=previousMood;showMood();'),'Gevoel moet bij opslagfout worden teruggedraaid');
 const cssForMood=readFileSync('styles.css','utf8');
 assert.ok(cssForMood.includes('.mood[aria-pressed="true"]'),'Gekozen gevoel moet visueel herkenbaar zijn');
 assert.ok(css.includes('select:focus-visible')&&css.includes('input[type=checkbox]:focus-visible')&&css.includes('a:focus-visible'),'Selectievakken, checkboxes en links moeten zichtbare toetsenbordfocus hebben');
@@ -93,7 +93,7 @@ assert.ok(css.includes('.high-contrast button{background:#000!important;color:#f
 assert.ok(css.includes('.high-contrast button:focus-visible')&&css.includes('outline:4px solid #000'),'Toetsenbordfocus moet in hoog contrast extra duidelijk zijn');
 console.log('MijnMoment smoke-tests: alles geslaagd.');
 
-assert.ok(js.includes("if(!saved)$('#goals-status').textContent='Je stapje is aangepast, maar niet opgeslagen."),'Stapjes moeten eerlijk melden als lokaal opslaan mislukt');
+assert.ok(js.includes('const previousGoal=data.goals[i];data.goals[i]=cb.checked;if(!persist()){data.goals[i]=previousGoal;cb.checked=previousGoal;updateGoalsStatus();'),'Stapjes moeten bij opslagfout worden teruggedraaid');
 assert.ok(js.includes("if(!saved)$('#display-status').textContent='Tekstgrootte aangepast, maar niet opgeslagen."),'Tekstgrootte moet opslagfouten melden');
 assert.ok(js.includes("if(!saved)$('#display-status').textContent='Contrast aangepast, maar niet opgeslagen."),'Hoog contrast moet opslagfouten melden');
 assert.ok(js.includes("if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen."),'Tekening moet opslagfouten melden');
@@ -140,3 +140,6 @@ assert.ok(js.includes('Afspraak niet opgeslagen. Je gegevens blijven staan.'),'B
 
 assert.ok(js.includes('const previousDone=data.tasks[i].done;data.tasks[i].done=cb.checked;if(!persist()){data.tasks[i].done=previousDone;'),'Afvinken moet bij opslagfout de vorige status herstellen');
 assert.ok(js.includes('Afvinken is niet opgeslagen. De vorige status is behouden.'),'Mislukt afvinken moet duidelijk worden gemeld');
+
+assert.ok(js.includes('Je gevoel kon niet worden opgeslagen. De vorige keuze is behouden.'),'Gevoel moet een duidelijke foutmelding tonen');
+assert.ok(js.includes('Je stapje kon niet worden opgeslagen. De vorige stand is behouden.'),'Doelen moeten een duidelijke foutmelding tonen');
