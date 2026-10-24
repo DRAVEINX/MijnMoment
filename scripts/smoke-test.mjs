@@ -120,3 +120,6 @@ assert.ok(datePattern.test('2026-10-24')&&!datePattern.test('2026-1-24'),'Datump
 assert.ok(timePattern.test('09:30')&&timePattern.test('23:59')&&!timePattern.test('24:00')&&!timePattern.test('9:30'),'Tijdpatroon moet geldige 24-uurs tijden herkennen');
 
 assert.ok(js.includes('renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();'),'Na terugzetten van een back-up moet de doelenvoortgang meteen worden bijgewerkt');
+
+assert.ok(js.includes('if(data.drawing===savedDrawing.src)ctx.drawImage(savedDrawing,0,0,canvas.width,canvas.height)'), 'Een verouderde tekening mag niet na het laden opnieuw verschijnen');
+assert.ok(js.includes('if(data.drawing===restored.src)ctx.drawImage(restored,0,0,canvas.width,canvas.height)'), 'Alleen de laatst teruggezette tekening mag op het canvas verschijnen');
