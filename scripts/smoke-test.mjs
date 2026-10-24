@@ -114,3 +114,5 @@ assert.ok(js.includes("['','Groen','Oranje','Rood'].includes(incoming.mood)"),'B
 assert.ok(js.includes("incoming.diary.length<=100000"),'Back-upimport moet onredelijk lange dagboekteksten afwijzen');
 assert.ok(js.includes("/^\\\\d{4}-\\\\d{2}-\\\\d{2}$/.test(x.date)"),'Back-upimport moet afspraakdatums controleren');
 assert.ok(js.includes("/^([01]\\\\d|2[0-3]):[0-5]\\\\d$/.test(x.time)"),'Back-upimport moet geldige 24-uurs tijden controleren');
+
+assert.ok(js.includes('renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();'),'Na terugzetten van een back-up moet de doelenvoortgang meteen worden bijgewerkt');
