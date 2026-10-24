@@ -30,3 +30,7 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 /* Vriendelijke, rustige herinnering zonder bewegende effecten. */
 .today-reminder{padding:16px;margin:12px 0 20px;border:2px solid currentColor;border-radius:16px;background:rgba(128,128,128,.08)}
 .today-reminder h3{margin:0 0 8px}.today-reminder p{margin:0;line-height:1.6}
+
+/* Rustige dagafsluiting, zonder animaties of geluid. */
+.today-finished:not([hidden]){padding:16px;margin:12px 0 20px;border:2px solid currentColor;border-radius:16px;background:rgba(128,128,128,.08)}
+.today-finished h3{margin:0 0 10px}.today-finished p{margin:8px 0;line-height:1.6}
