@@ -150,7 +150,6 @@ assert.ok(js.includes('Contrast niet opgeslagen. De vorige instelling is behoude
 assert.ok(js.includes('incoming.drawing.length<=4*1024*1024'),'Back-uptekeningen moeten een maximale grootte hebben');
 assert.ok(js.includes('(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?'),'Back-uptekeningen moeten geldige base64-notatie gebruiken');
 
-const sw=readFileSync('sw.js','utf8');
 for(const asset of ['./index.html','./styles.css','./app.js','./manifest.webmanifest','./assets/mijnmoment-icon.svg']) assert.ok(sw.includes("'"+asset+"'"),`Offline cache mist ${asset}`);
 assert.ok(sw.includes('event.waitUntil(caches.open(CACHE).then(cache => cache.put(request, copy)).catch(() => {}))'),'Cachefouten mogen het laden van de app niet verstoren');
 assert.ok(sw.includes("caches.match(request, { ignoreSearch: request.mode === 'navigate' })"),'Offline navigatie met queryparameters moet de cache kunnen gebruiken');
