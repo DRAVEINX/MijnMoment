@@ -220,3 +220,6 @@ assert.ok(js.includes("$('#task-progress-bar').value=percent"),'Voortgangsbalk m
 for(const id of ['today-reminder-title','today-reminder-message'])assert.ok(planningHtml.includes('id="'+id+'"'),'Vandaag-herinnering mist '+id);
 assert.ok(js.includes('task.date===localDateISO()'),'Vandaag-herinnering telt alleen taken van vandaag');
 assert.ok(js.includes('function updateTodayReminder()'),'Vandaag-herinnering wordt bijgewerkt');
+
+assert.ok(planningHtml.includes('id="today-home-button"'),'Startscherm mist Vandaag bekijken');
+assert.ok(js.includes("$('#today-home-button').addEventListener('click',()=>{taskFilter='today';renderTasks();showScreen('planning');})"),'Vandaag bekijken moet direct Vandaag openen');
