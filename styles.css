@@ -40,3 +40,6 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 
 /* Eenvoudige weekplanning: zeven duidelijke dagen onder elkaar. */
 .week-overview{margin:16px 0;padding:16px;border:2px solid currentColor;border-radius:16px}.week-overview h3{margin:0 0 8px}.week-days{display:grid;gap:12px}.week-day{padding:12px;border:1px solid currentColor;border-radius:12px}.week-day h4{margin:0 0 6px;text-transform:capitalize}.week-day p{margin:0 0 6px}.week-day ul{margin:8px 0 0;padding-left:24px}.week-day li{padding:3px 0;overflow-wrap:anywhere}
+
+/* Grote, makkelijk aan te tikken knop voor iedere weekdag. */
+.week-add-task{display:block;width:100%;min-height:48px;margin-top:12px;text-align:center}
