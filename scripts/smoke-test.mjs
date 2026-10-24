@@ -126,3 +126,6 @@ assert.ok(js.includes('if(data.drawing===restored.src)ctx.drawImage(restored,0,0
 
 assert.ok(js.includes("const previousDiary=data.diary;data.diary='';if(!persist()){data.diary=previousDiary;"),'Dagboek wissen moet opgeslagen tekst herstellen wanneer opslaan mislukt');
 assert.ok(js.includes('Wissen is niet gelukt. Je opgeslagen dagboektekst is behouden.'),'Dagboek wissen moet een opslagfout duidelijk melden');
+
+assert.ok(js.includes("if(!persist()){data.tasks.splice(i,0,removed);"),'Een verwijderde taak moet worden hersteld als opslaan mislukt');
+assert.ok(js.includes('Verwijderen is niet gelukt. De taak is behouden.'),'Bij een mislukte taakverwijdering moet de gebruiker een duidelijke melding krijgen');
