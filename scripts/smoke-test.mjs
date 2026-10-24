@@ -190,3 +190,7 @@ assert.ok(js.includes("let taskFilter='all'"),'Planning heeft een takenfilter');
 assert.ok(js.includes("$('#task-summary').textContent"),'Planning toont aantallen openstaande en afgeronde taken');
 const planningHtml=readFileSync('index.html','utf8');
 for(const id of ['tasks-all','tasks-open','tasks-done','task-summary'])assert.ok(planningHtml.includes('id="'+id+'"'),'Planning mist '+id);
+
+for(const id of ['task-date','task-today','task-tomorrow'])assert.ok(planningHtml.includes('id="'+id+'"'),'Taakdatum mist '+id);
+assert.ok(js.includes("date:$('#task-date').value||''"),'Taakdatum moet worden opgeslagen');
+assert.ok(js.includes('function taskDateLabel(date)'),'Taakdatum moet leesbaar worden weergegeven');
