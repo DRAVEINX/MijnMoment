@@ -162,3 +162,5 @@ assert.ok(css.includes('.high-contrast :focus-visible{outline:4px solid #e69b00!
 
 assert.ok(js.includes("$$('[data-target]').forEach("),'Alle starttegels moeten een klikactie krijgen');
 assert.ok(js.includes("$$('[data-phrase]').forEach("),'Alle communicatiezinnen moeten een klikactie krijgen');
+
+assert.equal([...js.matchAll(/(?<!\$)\$\([^\n)]*\)\.forEach/g)].length,0,'Gebruik querySelectorAll voor collecties; querySelector veroorzaakt een opstartfout');
