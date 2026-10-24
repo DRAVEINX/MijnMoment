@@ -51,7 +51,7 @@ assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bove
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
 assert.ok(html.includes('<button id="clear-diary" class="secondary" type="button">Dagboek wissen</button>'),'Dagboek moet een duidelijke wisknop hebben');
-assert.ok(js.includes("$('#clear-diary').addEventListener('click'")&&js.includes("data.diary='';persist();$('#diary-status').textContent='Je dagboektekst is gewist van dit apparaat.'"),'Dagboek wissen moet ook de opgeslagen tekst verwijderen');
+assert.ok(js.includes("$('#clear-diary').addEventListener('click'")&&js.includes("data.diary='';if(!persist()){data.diary=previousDiary;")&&js.includes("$('#diary').value='';$('#diary-status').textContent='Je dagboektekst is gewist van dit apparaat.'"),'Dagboek wissen moet ook de opgeslagen tekst verwijderen');
 assert.ok(js.includes("function persist(){try{localStorage.setItem(key,JSON.stringify(data));return true;}catch")&&js.includes("if(persist()){$('#diary-status').textContent='Je dagboek is opgeslagen op dit apparaat.';}else{$('#diary-status').textContent='Je dagboek kon niet worden opgeslagen."),'Dagboek moet alleen melden dat het is opgeslagen als lokaal opslaan lukt');
 assert.ok(js.includes("window.confirm('Weet je zeker dat je je dagboektekst wilt wissen? Dit kan niet ongedaan worden gemaakt.')")&&js.includes("Je dagboek is niet gewist."),'Dagboek wissen moet eerst om bevestiging vragen en annuleren respecteren');
 assert.ok(html.includes('<label for="say-text">Wat wil je zeggen?</label>'),'Communicatie-invoer moet een zichtbaar label hebben');
@@ -123,3 +123,6 @@ assert.ok(js.includes('renderTasks();renderAppointments();showMood();applyDispla
 
 assert.ok(js.includes('if(data.drawing===savedDrawing.src)ctx.drawImage(savedDrawing,0,0,canvas.width,canvas.height)'), 'Een verouderde tekening mag niet na het laden opnieuw verschijnen');
 assert.ok(js.includes('if(data.drawing===restored.src)ctx.drawImage(restored,0,0,canvas.width,canvas.height)'), 'Alleen de laatst teruggezette tekening mag op het canvas verschijnen');
+
+assert.ok(js.includes("const previousDiary=data.diary;data.diary='';if(!persist()){data.diary=previousDiary;"),'Dagboek wissen moet opgeslagen tekst herstellen wanneer opslaan mislukt');
+assert.ok(js.includes('Wissen is niet gelukt. Je opgeslagen dagboektekst is behouden.'),'Dagboek wissen moet een opslagfout duidelijk melden');
