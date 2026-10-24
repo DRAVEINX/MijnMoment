@@ -64,3 +64,7 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 
 /* Grote, duidelijk gelabelde statusfilters voor Mijn week. */
 .week-filter{margin:12px 0;padding:12px;border-radius:12px}.week-filter legend{font-weight:700}.week-filter label{display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 2px;cursor:pointer}.week-filter input{width:22px;height:22px;flex-shrink:0}
+
+/* AC: duidelijke toetsenbordfocus en respect voor minder beweging. */
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,.week-day summary:focus-visible{outline:3px solid #1359a0;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
