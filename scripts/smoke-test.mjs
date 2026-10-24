@@ -169,3 +169,6 @@ assert.ok(js.includes('function showScreen(target,updateHistory=true)'),'Elk ond
 assert.ok(js.includes("window.addEventListener('popstate'"),'Android-terug moet navigeren tussen schermen');
 assert.ok(js.includes("feelingsBack.classList.add('back-home')"),'Ook Gevoelens moet een terugknop hebben');
 assert.ok(readFileSync('styles.css','utf8').includes('[hidden]{display:none!important}'),'Verborgen schermen mogen niet zichtbaar zijn');
+
+assert.ok(js.includes("document.title=home?'MijnMoment'"),'Schermtitel moet meeveranderen met het gekozen onderdeel');
+assert.ok(js.includes("heading.focus({preventScroll:true})"),'Nieuw scherm moet focus geven aan de kop voor toegankelijkheid');
