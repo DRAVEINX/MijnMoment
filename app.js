@@ -1,14 +1,23 @@
+(async()=>{
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const key='mijnmoment-data-v2';
 const defaults={tasks:[],appointments:[],mood:'',diary:'',drawing:'',goals:[false,false,false],fontScale:1,highContrast:false};
 let data={...defaults};
-try{const saved=JSON.parse(localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'{}');data={...defaults,...saved};}catch{}
+const nativeStorage=window.Capacitor?.isNativePlatform?.()?window.Capacitor.Plugins?.Preferences:null;
+let savedText='';
+try{savedText=localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'';}catch{}
+if(nativeStorage){
+  try{const result=await nativeStorage.get({key});if(result.value!==null)savedText=result.value;}catch{ /* Blijf bestaande browsergegevens gebruiken. */ }
+}
+try{data={...defaults,...JSON.parse(savedText||'{}')};}catch{}
+let nativeWrite=Promise.resolve();
+function saveNative(value){if(!nativeStorage)return;nativeWrite=nativeWrite.catch(()=>{}).then(()=>nativeStorage.set({key,value})).catch(()=>{$('#settings-status').textContent='Android-opslag is niet gelukt. Maak een back-up van je gegevens.';});}
 if(!Array.isArray(data.tasks))data.tasks=[];
 if(!Array.isArray(data.appointments))data.appointments=[];
 if(!Array.isArray(data.goals))data.goals=[false,false,false];
 if(!Number.isFinite(Number(data.fontScale)))data.fontScale=1;data.fontScale=Math.max(.85,Math.min(1.5,Number(data.fontScale)));if(typeof data.highContrast!=='boolean')data.highContrast=false;
-function persist(){try{const serialized=JSON.stringify(data);localStorage.setItem(key,serialized);if(localStorage.getItem(key)!==serialized)throw new Error('Opslagcontrole mislukt');return true;}catch{$('#settings-status').textContent='Opslaan lukt niet. Controleer de vrije ruimte en app-opslag op je apparaat.';return false;}}
+function persist(){try{const serialized=JSON.stringify(data);localStorage.setItem(key,serialized);if(localStorage.getItem(key)!==serialized)throw new Error('Opslagcontrole mislukt');saveNative(serialized);return true;}catch{$('#settings-status').textContent='Opslaan lukt niet. Controleer de vrije ruimte en app-opslag op je apparaat.';return false;}}
 function makeButton(text,cls,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=cls||'';b.addEventListener('click',action);return b;}
 function renderTasks(){const ul=$('#task-list');ul.replaceChildren();if(data.tasks.length===0){const empty=document.createElement('li');empty.className='empty-state';empty.textContent='Je hebt nog geen taken. Voeg hierboven je eerste taak toe.';ul.append(empty);return;}data.tasks.forEach((task,i)=>{const li=document.createElement('li');const label=document.createElement('label');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!task.done;cb.addEventListener('change',()=>{const previousDone=data.tasks[i].done;data.tasks[i].done=cb.checked;if(!persist()){data.tasks[i].done=previousDone;$('#task-status').textContent='Afvinken is niet opgeslagen. De vorige status is behouden.';renderTasks();return;}$('#task-status').textContent=cb.checked?'Taak afgevinkt: '+data.tasks[i].text:'Taak weer open: '+data.tasks[i].text;renderTasks();});label.append(cb,document.createTextNode(' '+task.text));if(task.done)label.style.textDecoration='line-through';li.append(label,makeButton('Verwijder','secondary',()=>{const removed=data.tasks.splice(i,1)[0];if(!persist()){data.tasks.splice(i,0,removed);$('#task-status').textContent='Verwijderen is niet gelukt. De taak is behouden.';renderTasks();return;}$('#task-status').textContent='Taak verwijderd: '+removed.text;renderTasks();}));ul.append(li);});}
 $('#task-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#task').value.trim();if(!text){$('#task-status').textContent='Vul eerst in wat je wilt doen.';$('#task').focus();return;}data.tasks.push({text,done:false});if(!persist()){data.tasks.pop();renderTasks();$('#task-status').textContent='Taak niet opgeslagen. Je tekst blijft staan. Maak ruimte vrij en probeer het opnieuw.';$('#task').focus();return;}renderTasks();$('#task-status').textContent='Taak toegevoegd en opgeslagen: '+text;$('#task').value='';$('#task').focus();});
@@ -101,6 +110,8 @@ $('#import-file').addEventListener('change',async e=>{
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
 });
-$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
+$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');if(nativeStorage){nativeWrite=nativeWrite.catch(()=>{}).then(()=>nativeStorage.remove({key})).catch(()=>{$('#settings-status').textContent='Verwijderen uit Android-opslag is niet gelukt.';});}data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();applyDisplaySettings();
 if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+})().catch(error=>{console.error('MijnMoment kon niet starten',error);});
