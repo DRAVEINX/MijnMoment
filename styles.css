@@ -37,3 +37,6 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 
 /* Veilige nieuwe-dagactie: duidelijke knop, geen afleidende effecten. */
 .new-day-start{margin:14px 0 18px}.new-day-start button{width:100%;min-height:58px;font-size:1.1em;font-weight:700}.new-day-start p:not([hidden]){padding:12px;margin:10px 0;border:2px solid currentColor;border-radius:12px;line-height:1.6}
+
+/* Eenvoudige weekplanning: zeven duidelijke dagen onder elkaar. */
+.week-overview{margin:16px 0;padding:16px;border:2px solid currentColor;border-radius:16px}.week-overview h3{margin:0 0 8px}.week-days{display:grid;gap:12px}.week-day{padding:12px;border:1px solid currentColor;border-radius:12px}.week-day h4{margin:0 0 6px;text-transform:capitalize}.week-day p{margin:0 0 6px}.week-day ul{margin:8px 0 0;padding-left:24px}.week-day li{padding:3px 0;overflow-wrap:anywhere}
