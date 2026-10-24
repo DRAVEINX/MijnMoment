@@ -182,3 +182,6 @@ assert.ok(JSON.parse(readFileSync('package.json','utf8')).dependencies['@capacit
 
 assert.ok(js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk moet alle checkboxes tellen, niet één element');
 assert.ok(!js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk mag geen enkel element tellen');
+
+assert.ok(js.includes('nativeStorage.set({key,value}).then(()=>nativeStorage.get({key}))'),'Android moet opgeslagen gegevens teruglezen ter controle');
+assert.ok(js.includes('Opslaan: gelukt')&&js.includes('Opslaan: mislukt'),'Opslagstatus moet zichtbaar zijn');
