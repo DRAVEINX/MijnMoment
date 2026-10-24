@@ -159,3 +159,6 @@ const css=readFileSync('styles.css','utf8');
 assert.ok(css.includes('button{min-height:44px}'),'Knoppen moeten voldoende groot zijn om aan te raken');
 assert.ok(css.includes(':focus-visible{outline:3px solid #a85200;outline-offset:4px}'),'Toetsenbordfocus moet duidelijk zichtbaar zijn');
 assert.ok(css.includes('.high-contrast :focus-visible{outline:4px solid #e69b00!important'),'Toetsenbordfocus moet ook in hoog contrast zichtbaar zijn');
+
+assert.ok(js.includes("$$('[data-target]').forEach("),'Alle starttegels moeten een klikactie krijgen');
+assert.ok(js.includes("$$('[data-phrase]').forEach("),'Alle communicatiezinnen moeten een klikactie krijgen');
