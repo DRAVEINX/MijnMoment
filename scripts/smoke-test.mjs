@@ -271,5 +271,10 @@ assert.ok(js.includes("card.open=(weekSearchQuery||weekStatusFilter!=='all')?tru
 assert.ok(js.includes("'Geen taken gevonden.'")&&js.includes("$('#week-search-clear').addEventListener('click'"),'Geen-resultaatmelding en wissen moeten werken');
 
 assert.ok(html.includes('name="week-filter" value="all" checked')&&html.includes('name="week-filter" value="open"')&&html.includes('name="week-filter" value="done"'),'Drie weekfilters moeten aanwezig zijn');
-assert.ok(js.includes("let weekStatusFilter='all'")&&js.includes("input[name=\"week-filter\"]"),'Weekfilter moet standaard alle taken tonen en reageren op wijzigingen');
+assert.ok(js.includes("let weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)")&&js.includes("input[name=\"week-filter\"]"),'Weekfilter moet standaard alle taken tonen en reageren op wijzigingen');
 assert.ok(js.includes("weekStatusFilter==='open'&&!task.done")&&js.includes("weekStatusFilter==='done'&&task.done"),'Weekfilter moet open en afgerond onderscheiden');
+
+assert.ok(js.includes("weekStatusFilter:'all'")&&js.includes('data.weekStatusFilter=weekStatusFilter'),'Weekfilter moet in bestaande gegevens worden bewaard');
+assert.ok(js.includes('input.checked=input.value===weekStatusFilter'),'Opgeslagen filter moet bij starten geselecteerd zijn');
+assert.ok(js.includes('weekStatusFilter=previous')&&js.includes('data.weekStatusFilter=previous'),'Opslagfout moet vorige filter herstellen');
+assert.ok(js.includes('if(!persist())'),'Filterwijziging moet opslag controleren');
