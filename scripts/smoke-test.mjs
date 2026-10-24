@@ -231,3 +231,8 @@ for(const id of ['new-day-button','new-day-message'])assert.ok(planningHtml.incl
 const newDayHandler=js.slice(js.indexOf("$('#new-day-button').addEventListener"),js.indexOf("$('#today-home-button').addEventListener"));
 assert.ok(newDayHandler.includes("taskFilter='today'")&&newDayHandler.includes("$('#task-date').value=localDateISO()"),'Nieuwe dag moet Vandaag selecteren');
 assert.ok(!newDayHandler.includes('data.tasks')&&!newDayHandler.includes('persist()'),'Nieuwe dag mag opgeslagen taken niet wijzigen');
+
+assert.ok(planningHtml.includes('id="week-days"'),'Weekplanning mist dagencontainer');
+assert.ok(js.includes('for(let offset=0;offset<7;offset++)'),'Weekplanning toont zeven dagen');
+assert.ok(js.includes('task.date===date'),'Weekplanning groepeert op datum');
+assert.ok(js.includes('function renderTasks(){renderWeek();'),'Weekplanning wordt bijgewerkt bij taakwijzigingen');
