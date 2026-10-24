@@ -1,4 +1,4 @@
-const CACHE = 'mijnmoment-v4';
+const CACHE = 'mijnmoment-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -39,12 +39,12 @@ self.addEventListener('fetch', event => {
       .then(response => {
         if (response.ok) {
           const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(request, copy));
+          event.waitUntil(caches.open(CACHE).then(cache => cache.put(request, copy)).catch(() => {}));
         }
         return response;
       })
       .catch(async () => {
-        const cached = await caches.match(request);
+        const cached = await caches.match(request, { ignoreSearch: request.mode === 'navigate' });
         if (cached) return cached;
         if (request.mode === 'navigate') {
           const home = await caches.match('./index.html');
