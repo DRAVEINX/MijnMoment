@@ -278,3 +278,8 @@ assert.ok(js.includes("weekStatusFilter:'all'")&&js.includes('data.weekStatusFil
 assert.ok(js.includes('input.checked=input.value===weekStatusFilter'),'Opgeslagen filter moet bij starten geselecteerd zijn');
 assert.ok(js.includes('weekStatusFilter=previous')&&js.includes('data.weekStatusFilter=previous'),'Opslagfout moet vorige filter herstellen');
 assert.ok(js.includes('if(!persist())'),'Filterwijziging moet opslag controleren');
+
+assert.ok(html.includes('💾 Back-up downloaden')&&html.includes('📂 Back-up terugzetten'),'Back-upknoppen moeten duidelijk herkenbaar zijn');
+assert.ok(js.includes("incoming.weekStatusFilter===undefined||['all','open','done'].includes(incoming.weekStatusFilter)"),'Back-up moet alleen geldige weekfilters accepteren');
+assert.ok(js.includes("weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all'"),'Terugzetten moet gekozen weekfilter herstellen');
+assert.ok(js.includes('input.checked=input.value===weekStatusFilter'),'Teruggezet weekfilter moet zichtbaar geselecteerd zijn');
