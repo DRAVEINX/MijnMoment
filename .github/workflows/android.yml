@@ -22,6 +22,8 @@ jobs:
           java-version: '21'
       - name: Install dependencies
         run: npm install
+      - name: Run release checks
+        run: npm run check
       - name: Build web app
         run: npm run build:web
       - name: Generate Android project
