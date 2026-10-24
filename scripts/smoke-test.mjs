@@ -249,3 +249,8 @@ assert.ok(weekEdit.includes('if(!persist()){task.text=previous.text;task.date=pr
 assert.ok(weekEdit.includes("makeButton(task.done?'↩️ Opnieuw doen':'✅ Taak afvinken'"),'Weektaak moet afvinken en opnieuw doen ondersteunen');
 assert.ok(weekEdit.includes('task.done=!previousDone'),'Weektaak moet status wisselen');
 assert.ok(weekEdit.includes('if(!persist()){')&&weekEdit.includes('task.done=previousDone'),'Weektaak moet status herstellen bij opslagfout');
+
+assert.ok(weekEdit.includes("makeButton('🗑️ Taak verwijderen'"),'Weektaak moet verwijderknop hebben');
+assert.ok(weekEdit.includes("makeButton('Ja, verwijderen'")&&weekEdit.includes("makeButton('Nee, bewaren'"),'Weektaak vereist expliciete bevestiging');
+assert.ok(weekEdit.indexOf('data.tasks.splice(index,1)')>weekEdit.indexOf("makeButton('Ja, verwijderen'"),'Weektaak mag pas na bevestiging verwijderd worden');
+assert.ok(weekEdit.includes('data.tasks.splice(index,0,removed)'),'Weektaak moet hersteld worden bij opslagfout');
