@@ -263,3 +263,9 @@ assert.ok(html.includes('id="week-open-all"')&&html.includes('id="week-close-all
 assert.ok(js.includes("$('#week-open-all').addEventListener('click',()=>setAllWeekDays(true))"),'Alle dagen openen moet werken');
 assert.ok(js.includes("$('#week-close-all').addEventListener('click',()=>setAllWeekDays(false))"),'Alle dagen sluiten moet werken');
 assert.ok(js.includes('openWeekDays.clear()')&&js.includes('if(shouldOpen)openWeekDays.add(localDateISO(offset))'),'Alle zeven dagen moeten samen worden bijgewerkt');
+
+assert.ok(html.includes('id="week-search-input"')&&html.includes('id="week-search-clear"'),'Zoekveld en wissen-knop moeten aanwezig zijn');
+assert.ok(js.includes("task.text.toLocaleLowerCase('nl-NL').includes(weekSearchQuery)"),'Zoeken moet niet hoofdlettergevoelig zijn');
+assert.ok(js.includes('if(weekSearchQuery&&!dayTasks.length)continue'),'Zoeken toont alleen dagen met treffers');
+assert.ok(js.includes('card.open=weekSearchQuery?true:openWeekDays.has(date)'),'Zoekresultaten moeten zichtbaar zijn zonder weekstand te verliezen');
+assert.ok(js.includes("'Geen taken gevonden.'")&&js.includes("$('#week-search-clear').addEventListener('click'"),'Geen-resultaatmelding en wissen moeten werken');
