@@ -42,7 +42,7 @@ canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(
 canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
 function saveDrawing(){try{data.drawing=canvas.toDataURL('image/png');if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen. Maak ruimte vrij op je apparaat.';}catch{$('#drawing-status').textContent='De tekening kon niet worden opgeslagen. Maak ruimte vrij op je apparaat.';}}
 ['pointerup','pointercancel','lostpointercapture'].forEach(n=>canvas.addEventListener(n,()=>{if(drawing){drawing=false;saveDrawing();}}));
-if(typeof data.drawing==='string'&&data.drawing.startsWith('data:image/png;base64,')){const savedDrawing=new Image();savedDrawing.onload=()=>ctx.drawImage(savedDrawing,0,0,canvas.width,canvas.height);savedDrawing.src=data.drawing;}
+if(typeof data.drawing==='string'&&data.drawing.startsWith('data:image/png;base64,')){const savedDrawing=new Image();savedDrawing.onload=()=>{if(data.drawing===savedDrawing.src)ctx.drawImage(savedDrawing,0,0,canvas.width,canvas.height);};savedDrawing.src=data.drawing;}
 $('#clear-drawing').addEventListener('click',()=>{ctx.clearRect(0,0,canvas.width,canvas.height);data.drawing='';const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.':'Je tekening is van het scherm gewist, maar het opslaan van deze wijziging is mislukt.';});
 $('#download-drawing').addEventListener('click',()=>{const a=document.createElement('a');a.download='mijnmoment-tekening.png';a.href=canvas.toDataURL('image/png');a.click();$('#drawing-status').textContent='Je tekening wordt gedownload als PNG.';});
 $('#export-data').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mijnmoment-gegevens.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
@@ -70,7 +70,7 @@ $('#import-file').addEventListener('change',async e=>{
     $('#diary').value=data.diary;$('#say-text').value='';
     $('.checklist input[type=checkbox]').forEach((cb,i)=>cb.checked=!!data.goals[i]);
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    if(data.drawing){const restored=new Image();restored.onload=()=>ctx.drawImage(restored,0,0,canvas.width,canvas.height);restored.src=data.drawing;}
+    if(data.drawing){const restored=new Image();restored.onload=()=>{if(data.drawing===restored.src)ctx.drawImage(restored,0,0,canvas.width,canvas.height);};restored.src=data.drawing;}
     renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
