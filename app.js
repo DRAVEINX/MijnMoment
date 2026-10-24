@@ -18,9 +18,29 @@ $('#appointment-form').addEventListener('submit',e=>{e.preventDefault();const ti
 const moodMessages={Groen:'Fijn als je rustig bent. Je kunt doorgaan op jouw tempo.',Oranje:'Misschien helpt het om even pauze te nemen, rustiger te ademen of minder prikkels op te zoeken.',Rood:'Je mag stoppen. Zoek een rustige plek of iemand bij wie jij je veilig voelt.'};
 function showMood(){ $$('[data-mood]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mood===data.mood))); if(data.mood){$('#mood-status').textContent='Je koos: '+data.mood;$('#help').hidden=false;$('#help').textContent=moodMessages[data.mood]||'';}else{$('#mood-status').textContent='Je hebt nog niets gekozen.';$('#help').hidden=true;}}
 $$('[data-mood]').forEach(b=>{b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{const previousMood=data.mood;data.mood=b.dataset.mood;if(!persist()){data.mood=previousMood;showMood();$('#mood-status').textContent='Je gevoel kon niet worden opgeslagen. De vorige keuze is behouden.';return;}showMood();});});
-function returnToHome(){ $$('.feature').forEach(s=>s.hidden=true); $('.tiles').scrollIntoView({behavior:'smooth',block:'start'}); }
+const homeSections=[...document.querySelectorAll('main > section:not(.feature)')];
+const homeFooter=$('.site-footer');
+let currentScreen='';
+function showScreen(target,updateHistory=true){
+  const section=document.getElementById(target);
+  if(target!=='home'&&(!section||!['planning','gevoelens','communicatie','doelen','dagboek','instellingen','afspraken','tekenen'].includes(target)))return;
+  currentScreen=target;
+  const home=target==='home';
+  homeSections.forEach(el=>el.hidden=!home || (el.id==='gevoelens'&&target==='gevoelens'));
+  $$('.feature').forEach(el=>el.hidden=el.id!==target);
+  if(target==='gevoelens')$('#gevoelens').hidden=false;
+  homeFooter.hidden=!home;
+  document.body.classList.toggle('screen-open',!home);
+  window.scrollTo({top:0,behavior:'instant'});
+  if(updateHistory)history.pushState({screen:target},'',home?location.pathname+location.search:'#'+target);
+}
+function returnToHome(){showScreen('home');}
 $$('.feature').forEach(section=>{const back=makeButton('← Terug naar start','secondary',returnToHome);back.classList.add('back-home');section.prepend(back);});
-$$('[data-target]').forEach(b=>b.addEventListener('click',()=>{const section=document.getElementById(b.dataset.target);if(!section)return;$$('.feature').forEach(s=>s.hidden=true);if(section.classList.contains('feature'))section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});}));
+const feelingsBack=makeButton('← Terug naar start','secondary',returnToHome);
+feelingsBack.classList.add('back-home');$('#gevoelens').prepend(feelingsBack);
+$$('[data-target]').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.target)));
+window.addEventListener('popstate',()=>showScreen(location.hash.slice(1)||'home',false));
+showScreen(location.hash.slice(1)||'home',false);
 $$('[data-phrase]').forEach(b=>b.addEventListener('click',()=>{const area=$('#say-text');area.value=b.dataset.phrase;area.focus();$('#speech-status').textContent='Zin gekozen. Je kunt hem aanpassen of laten voorlezen.';}));
 $('#speak').addEventListener('click',()=>{const text=$('#say-text').value.trim(),status=$('#speech-status');if(!text){status.textContent='Typ eerst een zin of kies een voorbeeldzin.';$('#say-text').focus();return;}if(!('speechSynthesis'in window)){status.textContent='Voorlezen wordt niet ondersteund door deze browser.';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='nl-NL';utterance.onstart=()=>status.textContent='Ik lees je tekst voor.';utterance.onend=()=>status.textContent='Voorlezen is klaar.';utterance.onerror=()=>status.textContent='Voorlezen lukte niet. Probeer het opnieuw.';speechSynthesis.speak(utterance);});
 $('#clear-speech').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();$('#say-text').value='';$('#say-text').focus();$('#speech-status').textContent='De tekst is gewist.';});
