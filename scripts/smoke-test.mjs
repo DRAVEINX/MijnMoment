@@ -254,3 +254,7 @@ assert.ok(weekEdit.includes("makeButton('🗑️ Taak verwijderen'"),'Weektaak m
 assert.ok(weekEdit.includes("makeButton('Ja, verwijderen'")&&weekEdit.includes("makeButton('Nee, bewaren'"),'Weektaak vereist expliciete bevestiging');
 assert.ok(weekEdit.indexOf('data.tasks.splice(index,1)')>weekEdit.indexOf("makeButton('Ja, verwijderen'"),'Weektaak mag pas na bevestiging verwijderd worden');
 assert.ok(weekEdit.includes('data.tasks.splice(index,0,removed)'),'Weektaak moet hersteld worden bij opslagfout');
+
+assert.ok(weekEdit.includes("document.createElement('details')")&&weekEdit.includes("document.createElement('summary')"),'Weekdagen moeten toegankelijk open- en dichtklappen');
+assert.ok(js.includes('const openWeekDays=new Set([localDateISO()])'),'Vandaag moet standaard openstaan');
+assert.ok(weekEdit.includes('card.open=openWeekDays.has(date)')&&weekEdit.includes("card.addEventListener('toggle'"),'Open dagen moeten behouden blijven bij opnieuw tekenen');
