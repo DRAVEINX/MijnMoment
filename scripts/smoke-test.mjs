@@ -286,3 +286,10 @@ assert.ok(js.includes('input.checked=input.value===weekStatusFilter'),'Teruggeze
 
 assert.ok(!js.includes("$('input[name=\"week-filter\"]').forEach"),'Gebruik querySelectorAll voor filterkeuzes om opstartfouten te voorkomen');
 assert.ok(js.includes('if(!card.isConnected||weekSearchQuery'),'Verwijderde weekkaarten mogen geen verouderde openstatus terugschrijven');
+
+const pkg=JSON.parse(readFileSync('package.json','utf8'));
+assert.equal(pkg.version,'1.0.0-rc.1','AD moet een releasekandidaat blijven totdat Android is getest');
+assert.ok(html.includes('MijnMoment 1.0 testkandidaat: MM-20261024-AD'),'Versie AD moet duidelijk als testkandidaat herkenbaar zijn');
+const androidWorkflow=readFileSync('.github/workflows/android.yml','utf8');
+assert.ok(androidWorkflow.includes('run: npm run check'),'Android-build moet vooraf code- en functietests uitvoeren');
+assert.ok(androidWorkflow.includes('assembleDebug bundleDebug'),'AD maakt voorlopig alleen testbuilds, geen ondertekende productierelease');
