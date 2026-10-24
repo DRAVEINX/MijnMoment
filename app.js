@@ -269,7 +269,8 @@ $('#import-file').addEventListener('change',async e=>{
       &&typeof incoming.diary==='string'&&incoming.diary.length<=100000&&['','Groen','Oranje','Rood'].includes(incoming.mood)
       &&(incoming.drawing===''||(typeof incoming.drawing==='string'&&incoming.drawing.length<=4*1024*1024&&/^data:image\/png;base64,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(incoming.drawing)&&incoming.drawing.length>22))
       &&(incoming.fontScale===undefined||Number.isFinite(Number(incoming.fontScale)))
-      &&(incoming.highContrast===undefined||typeof incoming.highContrast==='boolean');
+      &&(incoming.highContrast===undefined||typeof incoming.highContrast==='boolean')
+      &&(incoming.weekStatusFilter===undefined||['all','open','done'].includes(incoming.weekStatusFilter));
     if(!valid){$('#settings-status').textContent='Deze back-up is ongeldig of niet van MijnMoment. Je gegevens zijn niet gewijzigd.';return;}
     if(!confirm('Een back-up terugzetten vervangt de huidige gegevens op dit apparaat. Download eerst een back-up als je niets wilt verliezen. Doorgaan?'))return;
     const previous=data;
@@ -279,6 +280,9 @@ $('#import-file').addEventListener('change',async e=>{
     $$('.checklist input[type=checkbox]').forEach((cb,i)=>cb.checked=!!data.goals[i]);
     ctx.clearRect(0,0,canvas.width,canvas.height);
     if(data.drawing){const restored=new Image();restored.onload=()=>{if(data.drawing===restored.src)ctx.drawImage(restored,0,0,canvas.width,canvas.height);};restored.src=data.drawing;}
+    weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all';
+    data.weekStatusFilter=weekStatusFilter;
+    $('input[name="week-filter"]').forEach(input=>{input.checked=input.value===weekStatusFilter;});
     renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
