@@ -223,3 +223,6 @@ assert.ok(js.includes('function updateTodayReminder()'),'Vandaag-herinnering wor
 
 assert.ok(planningHtml.includes('id="today-home-button"'),'Startscherm mist Vandaag bekijken');
 assert.ok(js.includes("$('#today-home-button').addEventListener('click',()=>{taskFilter='today';renderTasks();showScreen('planning');})"),'Vandaag bekijken moet direct Vandaag openen');
+
+assert.ok(planningHtml.includes('id="today-finished"')&&planningHtml.includes('Goed gedaan vandaag!'),'Dagafsluiting moet aanwezig en standaard verborgen zijn');
+assert.ok(js.includes("todayTasks.length>0&&remaining===0"),'Dagafsluiting alleen bij minstens één voltooide taak van vandaag');
