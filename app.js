@@ -31,8 +31,13 @@ function showScreen(target,updateHistory=true){
   if(target==='gevoelens')$('#gevoelens').hidden=false;
   homeFooter.hidden=!home;
   document.body.classList.toggle('screen-open',!home);
+  const heading=home?$('.welcome h2'):section.querySelector('h2');
+  document.title=home?'MijnMoment':heading.textContent.trim()+' – MijnMoment';
   window.scrollTo({top:0,behavior:'instant'});
-  if(updateHistory)history.pushState({screen:target},'',home?location.pathname+location.search:'#'+target);
+  if(updateHistory){
+    history.pushState({screen:target},'',home?location.pathname+location.search:'#'+target);
+    if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+  }
 }
 function returnToHome(){showScreen('home');}
 $$('.feature').forEach(section=>{const back=makeButton('← Terug naar start','secondary',returnToHome);back.classList.add('back-home');section.prepend(back);});
