@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const key='mijnmoment-data-v2';
-const defaults={tasks:[],appointments:[],mood:'',diary:'',drawing:'',goals:[false,false,false],fontScale:1,highContrast:false};
+const defaults={tasks:[],appointments:[],mood:'',diary:'',drawing:'',goals:[false,false,false],fontScale:1,highContrast:false,weekStatusFilter:'all'};
 let data={...defaults};
 const nativeStorage=window.Capacitor?.isNativePlatform?.()?window.Capacitor.Plugins?.Preferences:null;
 const storageDiagnostic=()=>`Opslag: ${nativeStorage?'Android beschikbaar':'Android niet beschikbaar'} · Capacitor: ${window.Capacitor?'ja':'nee'} · Platform: ${window.Capacitor?.getPlatform?.()||'onbekend'}`;
@@ -60,8 +60,24 @@ function updateTodayReminder(){
 }
 const openWeekDays=new Set([localDateISO()]);
 let weekSearchQuery='';
-let weekStatusFilter='all';
-$('input[name="week-filter"]').forEach(input=>input.addEventListener('change',()=>{if(input.checked){weekStatusFilter=input.value;renderWeek();}}));
+let weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all';
+data.weekStatusFilter=weekStatusFilter;
+$('input[name="week-filter"]').forEach(input=>{
+  input.checked=input.value===weekStatusFilter;
+  input.addEventListener('change',()=>{
+    if(!input.checked)return;
+    const previous=weekStatusFilter;
+    weekStatusFilter=input.value;
+    data.weekStatusFilter=weekStatusFilter;
+    if(!persist()){
+      weekStatusFilter=previous;
+      data.weekStatusFilter=previous;
+      $('input[name="week-filter"]').forEach(option=>{option.checked=option.value===previous;});
+      $('#week-search-status').textContent='Filterkeuze niet opgeslagen. Je vorige keuze blijft behouden.';
+    }
+    renderWeek();
+  });
+});
 $('#week-search-input').addEventListener('input',event=>{weekSearchQuery=event.target.value.trim().toLocaleLowerCase('nl-NL');renderWeek();});
 $('#week-search-clear').addEventListener('click',()=>{weekSearchQuery='';$('#week-search-input').value='';renderWeek();$('#week-search-input').focus();});
 function setAllWeekDays(shouldOpen){
