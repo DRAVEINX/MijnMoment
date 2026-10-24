@@ -3,3 +3,10 @@
 progress{display:block;width:100%;height:18px;margin:8px 0 14px;overflow:hidden;border:0;border-radius:999px;background:#e6eff8;accent-color:#12a99b}progress::-webkit-progress-bar{background:#e6eff8;border-radius:999px}progress::-webkit-progress-value{background:linear-gradient(90deg,#42d6b0,#1685ef);border-radius:999px}progress::-moz-progress-bar{background:linear-gradient(90deg,#42d6b0,#1685ef);border-radius:999px}
 
 .high-contrast progress{border:2px solid #000;background:#fff;accent-color:#000}.high-contrast progress::-webkit-progress-bar{background:#fff}.high-contrast progress::-webkit-progress-value{background:#000}.high-contrast progress::-moz-progress-bar{background:#000}
+
+/* Toegankelijke aanraakdoelen en duidelijk zichtbare toetsenbordfocus. */
+button{min-height:44px}
+input[type=checkbox]{min-width:24px;min-height:24px;accent-color:#103477}
+:focus-visible{outline:3px solid #a85200;outline-offset:4px}
+.high-contrast :focus-visible{outline:4px solid #e69b00!important;outline-offset:4px}
+@media(hover:none){.mood:hover,.tile:hover{transform:none}}
