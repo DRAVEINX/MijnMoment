@@ -71,6 +71,13 @@ function renderWeek(){
     const summary=document.createElement('p');summary.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
     card.append(heading,summary);
     if(dayTasks.length){const list=document.createElement('ul');for(const task of dayTasks){const item=document.createElement('li');item.textContent=(task.done?'✓ ':'○ ')+task.text;list.append(item);}card.append(list);}
+    const addButton=makeButton('➕ Taak toevoegen aan '+title.toLowerCase(),'secondary',()=>{
+      $('#task-date').value=date;
+      $('#task').focus();
+      $('#task').scrollIntoView({block:'center',behavior:'smooth'});
+    });
+    addButton.classList.add('week-add-task');
+    card.append(addButton);
     container.append(card);
   }
 }
