@@ -240,3 +240,8 @@ assert.ok(js.includes('function renderTasks(){renderWeek();'),'Weekplanning word
 assert.ok(js.includes("makeButton('➕ Taak toevoegen aan '+title.toLowerCase()"),'Iedere weekdag moet een taakknop krijgen');
 assert.ok(js.includes("$('#task-date').value=date"),'Dagknop vult de gekozen datum in');
 assert.ok(js.includes("$('#task').focus()"),'Dagknop zet focus op taakveld');
+
+const weekEdit=js.slice(js.indexOf('function renderWeek()'),js.indexOf('function renderTasks()'));
+assert.ok(weekEdit.includes("makeButton('✏️ Taak aanpassen'"),'Weektaak moet bewerkknop hebben');
+assert.ok(weekEdit.includes("makeButton('Annuleren'")&&weekEdit.includes("saveButton.textContent='Opslaan'"),'Weektaak moet opslaan en annuleren ondersteunen');
+assert.ok(weekEdit.includes('if(!persist()){task.text=previous.text;task.date=previous.date'),'Weektaak moet wijzigingen terugdraaien bij opslagfout');
