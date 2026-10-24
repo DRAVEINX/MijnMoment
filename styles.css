@@ -61,3 +61,6 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 
 /* Rustig zoekveld voor taken in Mijn week. */
 .week-search{margin:14px 0}.week-search label{display:block;font-weight:700;margin-bottom:8px}.week-search-row{display:flex;flex-wrap:wrap;gap:10px}.week-search-row input{flex:2 1 210px;min-height:48px}.week-search-row button{flex:1 1 170px;min-height:48px}.week-search-status{min-height:1em}
+
+/* Grote, duidelijk gelabelde statusfilters voor Mijn week. */
+.week-filter{margin:12px 0;padding:12px;border-radius:12px}.week-filter legend{font-weight:700}.week-filter label{display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 2px;cursor:pointer}.week-filter input{width:22px;height:22px;flex-shrink:0}
