@@ -112,7 +112,11 @@ assert.ok(js.includes("incoming.tasks.length<=1000&&incoming.tasks.every(x=>x&&t
 assert.ok(js.includes("d.toISOString().slice(0,10)===x.date"),'Back-upimport moet onmogelijke kalenderdatums afwijzen');
 assert.ok(js.includes("['','Groen','Oranje','Rood'].includes(incoming.mood)"),'Back-upimport moet alleen bekende gevoelswaarden accepteren');
 assert.ok(js.includes("incoming.diary.length<=100000"),'Back-upimport moet onredelijk lange dagboekteksten afwijzen');
-assert.ok(js.includes("/^\\\\d{4}-\\\\d{2}-\\\\d{2}$/.test(x.date)"),'Back-upimport moet afspraakdatums controleren');
-assert.ok(js.includes("/^([01]\\\\d|2[0-3]):[0-5]\\\\d$/.test(x.time)"),'Back-upimport moet geldige 24-uurs tijden controleren');
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+assert.ok(js.includes(datePattern.toString()),'Back-upimport moet het juiste datumpatroon gebruiken');
+assert.ok(js.includes(timePattern.toString()),'Back-upimport moet het juiste tijdpatroon gebruiken');
+assert.ok(datePattern.test('2026-10-24')&&!datePattern.test('2026-1-24'),'Datumpatroon moet ISO-notatie eisen');
+assert.ok(timePattern.test('09:30')&&timePattern.test('23:59')&&!timePattern.test('24:00')&&!timePattern.test('9:30'),'Tijdpatroon moet geldige 24-uurs tijden herkennen');
 
 assert.ok(js.includes('renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();'),'Na terugzetten van een back-up moet de doelenvoortgang meteen worden bijgewerkt');
