@@ -60,7 +60,7 @@ $('#import-file').addEventListener('change',async e=>{
       &&Array.isArray(incoming.appointments)&&incoming.appointments.length<=1000&&new Set(incoming.appointments.map(x=>x&&x.id)).size===incoming.appointments.length&&incoming.appointments.every(x=>x&&typeof x.id==='string'&&x.id.length>0&&typeof x.title==='string'&&x.title.trim().length>0&&x.title.length<=120&&typeof x.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)&&(()=>{const d=new Date(x.date+'T00:00:00');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===x.date})()&&typeof x.time==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(x.time))
       &&Array.isArray(incoming.goals)&&incoming.goals.length===3&&incoming.goals.every(x=>typeof x==='boolean')
       &&typeof incoming.diary==='string'&&incoming.diary.length<=100000&&['','Groen','Oranje','Rood'].includes(incoming.mood)
-      &&(incoming.drawing===''||(typeof incoming.drawing==='string'&&incoming.drawing.startsWith('data:image/png;base64,')))
+      &&(incoming.drawing===''||(typeof incoming.drawing==='string'&&incoming.drawing.length<=4*1024*1024&&/^data:image\/png;base64,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(incoming.drawing)&&incoming.drawing.length>22))
       &&(incoming.fontScale===undefined||Number.isFinite(Number(incoming.fontScale)))
       &&(incoming.highContrast===undefined||typeof incoming.highContrast==='boolean');
     if(!valid){$('#settings-status').textContent='Deze back-up is ongeldig of niet van MijnMoment. Je gegevens zijn niet gewijzigd.';return;}
