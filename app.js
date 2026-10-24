@@ -59,6 +59,13 @@ function updateTodayReminder(){
   $('#today-reminder-message').textContent=remaining===0?'Je hebt geen openstaande taken voor vandaag. Neem rustig je moment. 💚':remaining===1?'Je hebt vandaag nog 1 taak. Neem rustig de tijd. 💚':'Je hebt vandaag nog '+remaining+' taken. Je hoeft niet alles tegelijk te doen. 💚';
 }
 const openWeekDays=new Set([localDateISO()]);
+function setAllWeekDays(shouldOpen){
+  openWeekDays.clear();
+  for(let offset=0;offset<7;offset++)if(shouldOpen)openWeekDays.add(localDateISO(offset));
+  renderWeek();
+}
+$('#week-open-all').addEventListener('click',()=>setAllWeekDays(true));
+$('#week-close-all').addEventListener('click',()=>setAllWeekDays(false));
 function renderWeek(){
   const container=$('#week-days');container.replaceChildren();
   for(let offset=0;offset<7;offset++){
