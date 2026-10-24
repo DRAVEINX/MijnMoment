@@ -180,4 +180,5 @@ assert.ok(js.includes('nativeStorage.set({key,value})'),'Wijzigingen moeten ook 
 assert.ok(js.includes('nativeStorage.remove({key})'),'Gegevens verwijderen moet ook Android-opslag wissen');
 assert.ok(JSON.parse(readFileSync('package.json','utf8')).dependencies['@capacitor/preferences'],'Native opslagplugin moet beschikbaar zijn');
 
-assert.ok(js.includes("total=$$('.checklist input[type=checkbox]').length"),'Voortgangsbalk moet alle checkboxes tellen, niet één element');
+assert.ok(js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk moet alle checkboxes tellen, niet één element');
+assert.ok(!js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk mag geen enkel element tellen');
