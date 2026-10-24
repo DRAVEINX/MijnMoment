@@ -146,3 +146,6 @@ assert.ok(js.includes('Je stapje kon niet worden opgeslagen. De vorige stand is 
 
 assert.ok(js.includes('Tekstgrootte niet opgeslagen. De vorige instelling is behouden.'),'Tekstgrootte moet een duidelijke foutmelding tonen');
 assert.ok(js.includes('Contrast niet opgeslagen. De vorige instelling is behouden.'),'Contrast moet een duidelijke foutmelding tonen');
+
+assert.ok(js.includes('incoming.drawing.length<=4*1024*1024'),'Back-uptekeningen moeten een maximale grootte hebben');
+assert.ok(js.includes('(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?'),'Back-uptekeningen moeten geldige base64-notatie gebruiken');
