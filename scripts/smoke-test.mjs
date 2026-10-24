@@ -208,3 +208,7 @@ assert.ok(js.includes("task.text=previous.text;task.date=previous.date"),'Misluk
 assert.ok(js.includes("makeButton('Ja, verwijderen'"),'Verwijderen vereist expliciete bevestiging');
 assert.ok(js.includes("makeButton('Nee, bewaren'"),'Verwijderen kan worden geannuleerd');
 assert.ok(js.indexOf("const removed=data.tasks.splice(i,1)[0]")>js.indexOf("makeButton('Ja, verwijderen'"),'Taak mag pas na bevestiging worden verwijderd');
+
+assert.ok(js.includes("if(task.done)li.append(makeButton('Opnieuw doen'"),'Opnieuw doen verschijnt alleen bij afgeronde taken');
+assert.ok(js.includes("task.done=false;"),'Opnieuw doen zet de taak weer open');
+assert.ok(js.includes("if(!persist()){task.done=true"),'Opnieuw doen herstelt status bij opslagfout');
