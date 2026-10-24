@@ -283,3 +283,6 @@ assert.ok(html.includes('💾 Back-up downloaden')&&html.includes('📂 Back-up 
 assert.ok(js.includes("incoming.weekStatusFilter===undefined||['all','open','done'].includes(incoming.weekStatusFilter)"),'Back-up moet alleen geldige weekfilters accepteren');
 assert.ok(js.includes("weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all'"),'Terugzetten moet gekozen weekfilter herstellen');
 assert.ok(js.includes('input.checked=input.value===weekStatusFilter'),'Teruggezet weekfilter moet zichtbaar geselecteerd zijn');
+
+assert.ok(!js.includes("$('input[name=\"week-filter\"]').forEach"),'Gebruik querySelectorAll voor filterkeuzes om opstartfouten te voorkomen');
+assert.ok(js.includes('if(!card.isConnected||weekSearchQuery'),'Verwijderde weekkaarten mogen geen verouderde openstatus terugschrijven');
