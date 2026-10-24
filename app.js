@@ -14,7 +14,19 @@ if(nativeStorage){
   try{const result=await nativeStorage.get({key});if(result.value!==null)savedText=result.value;}catch{ /* Blijf bestaande browsergegevens gebruiken. */ }
 }
 try{data={...defaults,...JSON.parse(savedText||'{}')};}catch{}
-function saveNative(value){if(!nativeStorage)return;nativeStorage.set({key,value}).catch(()=>{$('#settings-status').textContent='Android-opslag is niet gelukt. Maak een back-up van je gegevens.';});}
+let saveSequence=0;
+function saveNative(value){
+  if(!nativeStorage)return;
+  const sequence=++saveSequence;
+  $('#storage-diagnostic').textContent=storageDiagnostic()+' · Opslaan: bezig';
+  nativeStorage.set({key,value}).then(()=>nativeStorage.get({key})).then(result=>{
+    if(result.value!==value)throw new Error('Controle na opslaan mislukt');
+    if(sequence===saveSequence)$('#storage-diagnostic').textContent=storageDiagnostic()+' · Opslaan: gelukt';
+  }).catch(()=>{
+    if(sequence===saveSequence)$('#storage-diagnostic').textContent=storageDiagnostic()+' · Opslaan: mislukt';
+    $('#settings-status').textContent='Android-opslag is niet gelukt. Maak een back-up van je gegevens.';
+  });
+}
 if(!Array.isArray(data.tasks))data.tasks=[];
 if(!Array.isArray(data.appointments))data.appointments=[];
 if(!Array.isArray(data.goals))data.goals=[false,false,false];
