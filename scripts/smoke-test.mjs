@@ -258,3 +258,8 @@ assert.ok(weekEdit.includes('data.tasks.splice(index,0,removed)'),'Weektaak moet
 assert.ok(weekEdit.includes("document.createElement('details')")&&weekEdit.includes("document.createElement('summary')"),'Weekdagen moeten toegankelijk open- en dichtklappen');
 assert.ok(js.includes('const openWeekDays=new Set([localDateISO()])'),'Vandaag moet standaard openstaan');
 assert.ok(weekEdit.includes('card.open=openWeekDays.has(date)')&&weekEdit.includes("card.addEventListener('toggle'"),'Open dagen moeten behouden blijven bij opnieuw tekenen');
+
+assert.ok(html.includes('id="week-open-all"')&&html.includes('id="week-close-all"'),'Beide weekoverzicht-knoppen moeten aanwezig zijn');
+assert.ok(js.includes("$('#week-open-all').addEventListener('click',()=>setAllWeekDays(true))"),'Alle dagen openen moet werken');
+assert.ok(js.includes("$('#week-close-all').addEventListener('click',()=>setAllWeekDays(false))"),'Alle dagen sluiten moet werken');
+assert.ok(js.includes('openWeekDays.clear()')&&js.includes('if(shouldOpen)openWeekDays.add(localDateISO(offset))'),'Alle zeven dagen moeten samen worden bijgewerkt');
