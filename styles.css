@@ -17,3 +17,12 @@ body.screen-open main{padding-top:20px}
 body.screen-open main>.feature:not([hidden]),body.screen-open main>#gevoelens:not([hidden]){min-height:calc(100dvh - 160px)}
 body.screen-open .hero-note{display:none}
 body.screen-open .back-home{display:block;margin-bottom:20px}
+
+/* Rustig, goed leesbaar voortgangsoverzicht voor Planning. */
+.task-progress{margin:16px 0;padding:16px;border:2px solid currentColor;border-radius:16px}
+.task-progress h3{margin:0 0 12px}
+.task-progress-numbers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.task-progress-numbers p{margin:0;padding:14px 8px;text-align:center;border-radius:12px;background:rgba(128,128,128,.12)}
+.task-progress-numbers strong{display:block;font-size:2rem;line-height:1.2}
+.task-progress-numbers span{display:block;margin-top:6px}
+.task-progress label{display:block;font-weight:600}
