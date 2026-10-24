@@ -10,3 +10,10 @@ input[type=checkbox]{min-width:24px;min-height:24px;accent-color:#103477}
 :focus-visible{outline:3px solid #a85200;outline-offset:4px}
 .high-contrast :focus-visible{outline:4px solid #e69b00!important;outline-offset:4px}
 @media(hover:none){.mood:hover,.tile:hover{transform:none}}
+
+/* Elk onderdeel opent als een eigen appscherm. */
+[hidden]{display:none!important}
+body.screen-open main{padding-top:20px}
+body.screen-open main>.feature:not([hidden]),body.screen-open main>#gevoelens:not([hidden]){min-height:calc(100dvh - 160px)}
+body.screen-open .hero-note{display:none}
+body.screen-open .back-home{display:block;margin-bottom:20px}
