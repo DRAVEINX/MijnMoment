@@ -236,3 +236,7 @@ assert.ok(planningHtml.includes('id="week-days"'),'Weekplanning mist dagencontai
 assert.ok(js.includes('for(let offset=0;offset<7;offset++)'),'Weekplanning toont zeven dagen');
 assert.ok(js.includes('task.date===date'),'Weekplanning groepeert op datum');
 assert.ok(js.includes('function renderTasks(){renderWeek();'),'Weekplanning wordt bijgewerkt bij taakwijzigingen');
+
+assert.ok(js.includes("makeButton('➕ Taak toevoegen aan '+title.toLowerCase()"),'Iedere weekdag moet een taakknop krijgen');
+assert.ok(js.includes("$('#task-date').value=date"),'Dagknop vult de gekozen datum in');
+assert.ok(js.includes("$('#task').focus()"),'Dagknop zet focus op taakveld');
