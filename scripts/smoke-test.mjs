@@ -24,7 +24,7 @@ assert.ok(html.includes('id="task-status" aria-live="polite"'),'Taakstatus moet 
 assert.ok(js.includes("if(!persist()){data.tasks.pop();renderTasks();")&&js.includes("$('#task-status').textContent='Taak toegevoegd en opgeslagen: '+text"),'Nieuwe taak moet alleen succesvolle opslag bevestigen');
 assert.ok(js.includes("'Taak verwijderd: '+removed.text"),'Verwijderen van taak moet een bevestiging tonen');
 assert.ok(html.includes('id="drawing-status" aria-live="polite"'),'Tekeningstatus moet toegankelijk worden aangekondigd');
-assert.ok(js.includes("$('#drawing-status').textContent=saved?'Je tekening is gewist.':'Je tekening is van het scherm gewist, maar het opslaan van deze wijziging is mislukt.'"),'Wissen van tekening moet een bevestiging tonen en opslagfouten eerlijk melden');
+assert.ok(js.includes("if(!persist()){data.drawing=previousDrawing;")&&js.includes("$('#drawing-status').textContent='Je tekening is gewist.'"),'Wissen van tekening moet alleen na succesvolle opslag het canvas wissen');
 assert.ok(js.includes("$('#drawing-status').textContent='Je tekening wordt gedownload als PNG.'"),'Downloaden van tekening moet een bevestiging tonen');
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
 assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
@@ -47,7 +47,7 @@ assert.ok(js.includes("$('#task').value='';$('#task').focus();"),'Na het toevoeg
 assert.ok(js.includes('Je hebt nog geen taken. Voeg hierboven je eerste taak toe.'),'Lege takenlijst moet uitleg tonen');
 assert.ok(js.includes('Je hebt nog geen afspraken. Voeg hierboven een afspraak toe.'),'Lege afsprakenlijst moet uitleg tonen');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
-assert.ok(js.includes("data.fontScale=Math.min(1.5"),'Tekstgrootte moet een bovengrens hebben');
+assert.ok(js.includes('Math.min(1.5,Math.round('),'Tekstgrootte moet een bovengrens hebben');
 assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"),'Spraakherkenning moet op ondersteunde browsers werken');
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
 assert.ok(html.includes('<button id="clear-diary" class="secondary" type="button">Dagboek wissen</button>'),'Dagboek moet een duidelijke wisknop hebben');
@@ -96,8 +96,8 @@ console.log('MijnMoment smoke-tests: alles geslaagd.');
 assert.ok(js.includes('const previousGoal=data.goals[i];data.goals[i]=cb.checked;if(!persist()){data.goals[i]=previousGoal;cb.checked=previousGoal;updateGoalsStatus();'),'Stapjes moeten bij opslagfout worden teruggedraaid');
 assert.ok(js.includes('data.fontScale=previousScale;applyDisplaySettings();'),'Tekstgrootte moet bij opslagfout worden hersteld');
 assert.ok(js.includes('data.highContrast=previousContrast;applyDisplaySettings();'),'Contrast moet bij opslagfout worden hersteld');
-assert.ok(js.includes("if(!persist())$('#drawing-status').textContent='Je tekening is zichtbaar, maar kon niet worden opgeslagen."),'Tekening moet opslagfouten melden');
-assert.ok(js.includes("const saved=persist();$('#drawing-status').textContent=saved?'Je tekening is gewist.'"),'Tekening wissen mag geen succesvolle opslag claimen als opslaan mislukt');
+assert.ok(js.includes("if(!persist()){data.drawing=previousDrawing;")&&js.includes('De vorige opgeslagen tekening is behouden.'),'Tekening moet vorige opgeslagen versie behouden bij opslagfouten');
+assert.ok(js.includes("Wissen niet opgeslagen. De vorige opgeslagen tekening is behouden."),'Tekening wissen moet een mislukte opslag melden');
 
 assert.ok(js.includes("$('#import-data').addEventListener('click',()=>$('#import-file').click())"),'Back-up terugzetten moet een bestand kunnen kiezen');
 assert.ok(js.includes("file.size>5*1024*1024"),'Import moet extreem grote back-upbestanden afwijzen');
