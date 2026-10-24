@@ -58,6 +58,7 @@ function updateTodayReminder(){
   $('#today-reminder-title').textContent=(hour<12?'☀️ Goedemorgen!':hour<18?'🌤️ Goedemiddag!':'🌙 Goedenavond!');
   $('#today-reminder-message').textContent=remaining===0?'Je hebt geen openstaande taken voor vandaag. Neem rustig je moment. 💚':remaining===1?'Je hebt vandaag nog 1 taak. Neem rustig de tijd. 💚':'Je hebt vandaag nog '+remaining+' taken. Je hoeft niet alles tegelijk te doen. 💚';
 }
+const openWeekDays=new Set([localDateISO()]);
 function renderWeek(){
   const container=$('#week-days');container.replaceChildren();
   for(let offset=0;offset<7;offset++){
@@ -66,10 +67,13 @@ function renderWeek(){
     const open=dayTasks.filter(task=>!task.done).length;
     const day=new Date(date+'T12:00:00');
     const title=offset===0?'Vandaag':offset===1?'Morgen':day.toLocaleDateString('nl-NL',{weekday:'long'});
-    const card=document.createElement('div');card.className='week-day';
-    const heading=document.createElement('h4');heading.textContent=title+' · '+day.toLocaleDateString('nl-NL',{day:'numeric',month:'long'});
-    const summary=document.createElement('p');summary.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
-    card.append(heading,summary);
+    const card=document.createElement('details');card.className='week-day';card.open=openWeekDays.has(date);
+    card.addEventListener('toggle',()=>{if(card.open)openWeekDays.add(date);else openWeekDays.delete(date);});
+    const dayHeader=document.createElement('summary');dayHeader.className='week-day-header';
+    const heading=document.createElement('strong');heading.textContent=title+' · '+day.toLocaleDateString('nl-NL',{day:'numeric',month:'long'});
+    const count=document.createElement('span');count.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
+    dayHeader.append(heading,count);card.append(dayHeader);
+    const dayContent=document.createElement('div');dayContent.className='week-day-content';
     if(dayTasks.length){const list=document.createElement('ul');for(const task of dayTasks){
       const item=document.createElement('li');
       const taskText=document.createElement('span');taskText.textContent=(task.done?'✓ ':'○ ')+task.text;
@@ -119,14 +123,14 @@ function renderWeek(){
       });
       deleteButton.classList.add('week-delete-task');
       editButton.classList.add('week-edit-task');item.append(taskText,toggleButton,editButton,deleteButton);list.append(item);
-    }card.append(list);}
+    }dayContent.append(list);}
     const addButton=makeButton('➕ Taak toevoegen aan '+title.toLowerCase(),'secondary',()=>{
       $('#task-date').value=date;
       $('#task').focus();
       $('#task').scrollIntoView({block:'center',behavior:'smooth'});
     });
     addButton.classList.add('week-add-task');
-    card.append(addButton);
+    dayContent.append(addButton);card.append(dayContent);
     container.append(card);
   }
 }
