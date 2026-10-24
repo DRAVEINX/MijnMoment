@@ -70,7 +70,24 @@ function renderWeek(){
     const heading=document.createElement('h4');heading.textContent=title+' · '+day.toLocaleDateString('nl-NL',{day:'numeric',month:'long'});
     const summary=document.createElement('p');summary.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
     card.append(heading,summary);
-    if(dayTasks.length){const list=document.createElement('ul');for(const task of dayTasks){const item=document.createElement('li');item.textContent=(task.done?'✓ ':'○ ')+task.text;list.append(item);}card.append(list);}
+    if(dayTasks.length){const list=document.createElement('ul');for(const task of dayTasks){
+      const item=document.createElement('li');
+      const taskText=document.createElement('span');taskText.textContent=(task.done?'✓ ':'○ ')+task.text;
+      const editButton=makeButton('✏️ Taak aanpassen','secondary',()=>{
+        const form=document.createElement('form');form.className='task-edit-form';
+        const nameLabel=document.createElement('label');nameLabel.textContent='Naam van de taak';
+        const nameInput=document.createElement('input');nameInput.type='text';nameInput.maxLength=120;nameInput.required=true;nameInput.value=task.text;nameLabel.append(nameInput);
+        const dateLabel=document.createElement('label');dateLabel.textContent='Datum (mag leeg blijven)';
+        const dateInput=document.createElement('input');dateInput.type='date';dateInput.value=task.date||'';dateLabel.append(dateInput);
+        const buttons=document.createElement('div');buttons.className='form-row';
+        const saveButton=document.createElement('button');saveButton.type='submit';saveButton.textContent='Opslaan';
+        const cancelButton=makeButton('Annuleren','secondary',()=>renderTasks());
+        buttons.append(saveButton,cancelButton);form.append(nameLabel,dateLabel,buttons);
+        form.addEventListener('submit',event=>{event.preventDefault();const newText=nameInput.value.trim();if(!newText){nameInput.focus();return;}const previous={text:task.text,date:task.date};task.text=newText;task.date=dateInput.value;if(!persist()){task.text=previous.text;task.date=previous.date;$('#task-status').textContent='Aanpassen is niet opgeslagen. De oude taak is behouden.';renderTasks();return;}$('#task-status').textContent='Taak aangepast en opgeslagen: '+newText;renderTasks();});
+        item.replaceChildren(form);nameInput.focus();
+      });
+      editButton.classList.add('week-edit-task');item.append(taskText,editButton);list.append(item);
+    }card.append(list);}
     const addButton=makeButton('➕ Taak toevoegen aan '+title.toLowerCase(),'secondary',()=>{
       $('#task-date').value=date;
       $('#task').focus();
