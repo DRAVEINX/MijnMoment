@@ -98,7 +98,27 @@ function renderWeek(){
         renderTasks();
       });
       toggleButton.classList.add('week-toggle-task');
-      editButton.classList.add('week-edit-task');item.append(taskText,toggleButton,editButton);list.append(item);
+      const deleteButton=makeButton('🗑️ Taak verwijderen','secondary',()=>{
+        const confirmation=document.createElement('div');confirmation.className='task-delete-confirmation';
+        const question=document.createElement('p');question.textContent='Wil je deze taak echt verwijderen? '+task.text;
+        const actions=document.createElement('div');actions.className='form-row';
+        const yes=makeButton('Ja, verwijderen','secondary',()=>{
+          const index=data.tasks.indexOf(task);
+          if(index<0){renderTasks();return;}
+          const removed=data.tasks.splice(index,1)[0];
+          if(!persist()){
+            data.tasks.splice(index,0,removed);
+            $('#task-status').textContent='Verwijderen is niet gelukt. De taak is behouden.';
+            renderTasks();return;
+          }
+          $('#task-status').textContent='Taak verwijderd: '+removed.text;
+          renderTasks();
+        });
+        const no=makeButton('Nee, bewaren','secondary',()=>{renderTasks();$('#task-status').textContent='Taak bewaard: '+task.text;});
+        actions.append(yes,no);confirmation.append(question,actions);item.replaceChildren(confirmation);no.focus();
+      });
+      deleteButton.classList.add('week-delete-task');
+      editButton.classList.add('week-edit-task');item.append(taskText,toggleButton,editButton,deleteButton);list.append(item);
     }card.append(list);}
     const addButton=makeButton('➕ Taak toevoegen aan '+title.toLowerCase(),'secondary',()=>{
       $('#task-date').value=date;
