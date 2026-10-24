@@ -26,3 +26,7 @@ body.screen-open .back-home{display:block;margin-bottom:20px}
 .task-progress-numbers strong{display:block;font-size:2rem;line-height:1.2}
 .task-progress-numbers span{display:block;margin-top:6px}
 .task-progress label{display:block;font-weight:600}
+
+/* Vriendelijke, rustige herinnering zonder bewegende effecten. */
+.today-reminder{padding:16px;margin:12px 0 20px;border:2px solid currentColor;border-radius:16px;background:rgba(128,128,128,.08)}
+.today-reminder h3{margin:0 0 8px}.today-reminder p{margin:0;line-height:1.6}
