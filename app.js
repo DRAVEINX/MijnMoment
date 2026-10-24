@@ -38,6 +38,14 @@ $('#task-today').addEventListener('click',()=>{$('#task-date').value=localDateIS
 $('#task-tomorrow').addEventListener('click',()=>{$('#task-date').value=localDateISO(1);});
 function taskDateLabel(date){if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date||''))return '';if(date===localDateISO())return 'Vandaag';if(date===localDateISO(1))return 'Morgen';const d=new Date(date+'T12:00:00');return Number.isNaN(d.getTime())?'':d.toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});}
 let taskFilter='today';
+$('#new-day-button').addEventListener('click',()=>{
+  taskFilter='today';
+  $('#task-date').value=localDateISO();
+  renderTasks();
+  const message=$('#new-day-message');
+  message.textContent='Vandaag is een nieuwe dag. Je mag rustig opnieuw beginnen. 💚 Je oude taken blijven bewaard.';
+  message.hidden=false;
+});
 $('#today-home-button').addEventListener('click',()=>{taskFilter='today';renderTasks();showScreen('planning');});
 for(const [id,filter] of [['tasks-today','today'],['tasks-tomorrow','tomorrow'],['tasks-done','done'],['tasks-all','all'],['tasks-open','open']]){
   $('#'+id).addEventListener('click',()=>{taskFilter=filter;renderTasks();});
