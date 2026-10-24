@@ -204,3 +204,7 @@ assert.ok(js.includes("makeButton('Aanpassen'"),'Elke taak heeft een Aanpassen-k
 assert.ok(js.includes("makeButton('Annuleren'"),'Aanpassen kan worden geannuleerd');
 assert.ok(js.includes("task.text=newText;task.date=dateInput.value"),'Naam en datum worden samen aangepast');
 assert.ok(js.includes("task.text=previous.text;task.date=previous.date"),'Mislukt opslaan herstelt oude taak');
+
+assert.ok(js.includes("makeButton('Ja, verwijderen'"),'Verwijderen vereist expliciete bevestiging');
+assert.ok(js.includes("makeButton('Nee, bewaren'"),'Verwijderen kan worden geannuleerd');
+assert.ok(js.indexOf("const removed=data.tasks.splice(i,1)[0]")>js.indexOf("makeButton('Ja, verwijderen'"),'Taak mag pas na bevestiging worden verwijderd');
