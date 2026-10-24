@@ -60,6 +60,8 @@ function updateTodayReminder(){
 }
 const openWeekDays=new Set([localDateISO()]);
 let weekSearchQuery='';
+let weekStatusFilter='all';
+$('input[name="week-filter"]').forEach(input=>input.addEventListener('change',()=>{if(input.checked){weekStatusFilter=input.value;renderWeek();}}));
 $('#week-search-input').addEventListener('input',event=>{weekSearchQuery=event.target.value.trim().toLocaleLowerCase('nl-NL');renderWeek();});
 $('#week-search-clear').addEventListener('click',()=>{weekSearchQuery='';$('#week-search-input').value='';renderWeek();$('#week-search-input').focus();});
 function setAllWeekDays(shouldOpen){
@@ -74,14 +76,14 @@ function renderWeek(){
   let matches=0;
   for(let offset=0;offset<7;offset++){
     const date=localDateISO(offset);
-    const dayTasks=data.tasks.filter(task=>task.date===date&&(!weekSearchQuery||task.text.toLocaleLowerCase('nl-NL').includes(weekSearchQuery)));
-    if(weekSearchQuery&&!dayTasks.length)continue;
+    const dayTasks=data.tasks.filter(task=>task.date===date&&(weekStatusFilter==='all'||(weekStatusFilter==='open'&&!task.done)||(weekStatusFilter==='done'&&task.done))&&(!weekSearchQuery||task.text.toLocaleLowerCase('nl-NL').includes(weekSearchQuery)));
+    if((weekSearchQuery||weekStatusFilter!=='all')&&!dayTasks.length)continue;
     matches+=dayTasks.length;
     const open=dayTasks.filter(task=>!task.done).length;
     const day=new Date(date+'T12:00:00');
     const title=offset===0?'Vandaag':offset===1?'Morgen':day.toLocaleDateString('nl-NL',{weekday:'long'});
-    const card=document.createElement('details');card.className='week-day';card.open=weekSearchQuery?true:openWeekDays.has(date);
-    card.addEventListener('toggle',()=>{if(weekSearchQuery)return;if(card.open)openWeekDays.add(date);else openWeekDays.delete(date);});
+    const card=document.createElement('details');card.className='week-day';card.open=(weekSearchQuery||weekStatusFilter!=='all')?true:openWeekDays.has(date);
+    card.addEventListener('toggle',()=>{if(weekSearchQuery||weekStatusFilter!=='all')return;if(card.open)openWeekDays.add(date);else openWeekDays.delete(date);});
     const dayHeader=document.createElement('summary');dayHeader.className='week-day-header';
     const heading=document.createElement('strong');heading.textContent=title+' · '+day.toLocaleDateString('nl-NL',{day:'numeric',month:'long'});
     const count=document.createElement('span');count.textContent=dayTasks.length===0?'Geen taken':open+' nog te doen · '+(dayTasks.length-open)+' afgerond';
@@ -146,7 +148,7 @@ function renderWeek(){
     dayContent.append(addButton);card.append(dayContent);
     container.append(card);
   }
-  $('#week-search-status').textContent=weekSearchQuery?(matches===0?'Geen taken gevonden.':matches+' '+(matches===1?'taak gevonden.':'taken gevonden.'):'';
+  $('#week-search-status').textContent=(weekSearchQuery||weekStatusFilter!=='all')?(matches===0?'Geen taken gevonden.':matches+' '+(matches===1?'taak gevonden.':'taken gevonden.'):'';
 }
 function renderTasks(){renderWeek();updateTodayReminder();const ul=$('#task-list');ul.replaceChildren();const openCount=data.tasks.filter(task=>!task.done).length;const doneCount=data.tasks.length-openCount;const percent=data.tasks.length?Math.round(doneCount/data.tasks.length*100):0;$('#task-done-count').textContent=String(doneCount);$('#task-open-count').textContent=String(openCount);$('#task-progress-percent').textContent=percent+'%';$('#task-progress-bar').value=percent;$('#task-progress-bar').textContent=percent+'%';$('#task-summary').textContent=`${openCount} nog te doen · ${data.tasks.length-openCount} afgerond`;for(const [id,filter] of [['tasks-today','today'],['tasks-tomorrow','tomorrow'],['tasks-done','done'],['tasks-all','all'],['tasks-open','open']])$('#'+id).setAttribute('aria-pressed',String(taskFilter===filter));if(data.tasks.length===0){const empty=document.createElement('li');empty.className='empty-state';empty.textContent='Je hebt nog geen taken. Voeg hierboven je eerste taak toe.';ul.append(empty);return;}data.tasks.forEach((task,i)=>{if(taskFilter==='open'&&task.done||taskFilter==='done'&&!task.done||taskFilter==='today'&&(task.done||task.date!==localDateISO())||taskFilter==='tomorrow'&&(task.done||task.date!==localDateISO(1)))return;const li=document.createElement('li');const label=document.createElement('label');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!task.done;cb.addEventListener('change',()=>{const previousDone=data.tasks[i].done;data.tasks[i].done=cb.checked;if(!persist()){data.tasks[i].done=previousDone;$('#task-status').textContent='Afvinken is niet opgeslagen. De vorige status is behouden.';renderTasks();return;}$('#task-status').textContent=cb.checked?'Taak afgevinkt: '+data.tasks[i].text:'Taak weer open: '+data.tasks[i].text;renderTasks();});label.append(cb,document.createTextNode(' '+task.text+(taskDateLabel(task.date)?' — '+taskDateLabel(task.date):'')));if(task.done)label.style.textDecoration='line-through';li.append(label);if(task.done)li.append(makeButton('Opnieuw doen','secondary',()=>{
   task.done=false;
