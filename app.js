@@ -71,7 +71,7 @@ $('#import-file').addEventListener('change',async e=>{
     $('.checklist input[type=checkbox]').forEach((cb,i)=>cb.checked=!!data.goals[i]);
     ctx.clearRect(0,0,canvas.width,canvas.height);
     if(data.drawing){const restored=new Image();restored.onload=()=>ctx.drawImage(restored,0,0,canvas.width,canvas.height);restored.src=data.drawing;}
-    renderTasks();renderAppointments();showMood();applyDisplaySettings();
+    renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
 });
