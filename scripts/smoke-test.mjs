@@ -199,3 +199,8 @@ for(const id of ['tasks-today','tasks-tomorrow'])assert.ok(planningHtml.includes
 assert.ok(js.includes("task.date!==localDateISO(1)"),'Morgen filtert op de juiste datum');
 assert.ok(js.includes("task.date!==localDateISO()"),'Vandaag filtert op de juiste datum');
 assert.ok(js.includes('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'),'Datumweergave gebruikt geldige datumcontrole');
+
+assert.ok(js.includes("makeButton('Aanpassen'"),'Elke taak heeft een Aanpassen-knop');
+assert.ok(js.includes("makeButton('Annuleren'"),'Aanpassen kan worden geannuleerd');
+assert.ok(js.includes("task.text=newText;task.date=dateInput.value"),'Naam en datum worden samen aangepast');
+assert.ok(js.includes("task.text=previous.text;task.date=previous.date"),'Mislukt opslaan herstelt oude taak');
