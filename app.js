@@ -11,8 +11,7 @@ if(nativeStorage){
   try{const result=await nativeStorage.get({key});if(result.value!==null)savedText=result.value;}catch{ /* Blijf bestaande browsergegevens gebruiken. */ }
 }
 try{data={...defaults,...JSON.parse(savedText||'{}')};}catch{}
-let nativeWrite=Promise.resolve();
-function saveNative(value){if(!nativeStorage)return;nativeWrite=nativeWrite.catch(()=>{}).then(()=>nativeStorage.set({key,value})).catch(()=>{$('#settings-status').textContent='Android-opslag is niet gelukt. Maak een back-up van je gegevens.';});}
+function saveNative(value){if(!nativeStorage)return;nativeStorage.set({key,value}).catch(()=>{$('#settings-status').textContent='Android-opslag is niet gelukt. Maak een back-up van je gegevens.';});}
 if(!Array.isArray(data.tasks))data.tasks=[];
 if(!Array.isArray(data.appointments))data.appointments=[];
 if(!Array.isArray(data.goals))data.goals=[false,false,false];
@@ -110,7 +109,7 @@ $('#import-file').addEventListener('change',async e=>{
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
 });
-$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');if(nativeStorage){nativeWrite=nativeWrite.catch(()=>{}).then(()=>nativeStorage.remove({key})).catch(()=>{$('#settings-status').textContent='Verwijderen uit Android-opslag is niet gelukt.';});}data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
+$('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');if(nativeStorage){nativeStorage.remove({key}).catch(()=>{$('#settings-status').textContent='Verwijderen uit Android-opslag is niet gelukt.';});}data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();applyDisplaySettings();
 if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
