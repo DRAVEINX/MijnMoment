@@ -267,5 +267,9 @@ assert.ok(js.includes('openWeekDays.clear()')&&js.includes('if(shouldOpen)openWe
 assert.ok(html.includes('id="week-search-input"')&&html.includes('id="week-search-clear"'),'Zoekveld en wissen-knop moeten aanwezig zijn');
 assert.ok(js.includes("task.text.toLocaleLowerCase('nl-NL').includes(weekSearchQuery)"),'Zoeken moet niet hoofdlettergevoelig zijn');
 assert.ok(js.includes('if(weekSearchQuery&&!dayTasks.length)continue'),'Zoeken toont alleen dagen met treffers');
-assert.ok(js.includes('card.open=weekSearchQuery?true:openWeekDays.has(date)'),'Zoekresultaten moeten zichtbaar zijn zonder weekstand te verliezen');
+assert.ok(js.includes("card.open=(weekSearchQuery||weekStatusFilter!=='all')?true:openWeekDays.has(date)"),'Zoekresultaten moeten zichtbaar zijn zonder weekstand te verliezen');
 assert.ok(js.includes("'Geen taken gevonden.'")&&js.includes("$('#week-search-clear').addEventListener('click'"),'Geen-resultaatmelding en wissen moeten werken');
+
+assert.ok(html.includes('name="week-filter" value="all" checked')&&html.includes('name="week-filter" value="open"')&&html.includes('name="week-filter" value="done"'),'Drie weekfilters moeten aanwezig zijn');
+assert.ok(js.includes("let weekStatusFilter='all'")&&js.includes("input[name=\"week-filter\"]"),'Weekfilter moet standaard alle taken tonen en reageren op wijzigingen');
+assert.ok(js.includes("weekStatusFilter==='open'&&!task.done")&&js.includes("weekStatusFilter==='done'&&task.done"),'Weekfilter moet open en afgerond onderscheiden');
