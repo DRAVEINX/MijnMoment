@@ -5,6 +5,8 @@ const key='mijnmoment-data-v2';
 const defaults={tasks:[],appointments:[],mood:'',diary:'',drawing:'',goals:[false,false,false],fontScale:1,highContrast:false};
 let data={...defaults};
 const nativeStorage=window.Capacitor?.isNativePlatform?.()?window.Capacitor.Plugins?.Preferences:null;
+const storageDiagnostic=()=>`Opslag: ${nativeStorage?'Android beschikbaar':'Android niet beschikbaar'} · Capacitor: ${window.Capacitor?'ja':'nee'} · Platform: ${window.Capacitor?.getPlatform?.()||'onbekend'}`;
+
 let savedText='';
 try{savedText=localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'';}catch{}
 if(nativeStorage){
@@ -111,6 +113,7 @@ $('#import-file').addEventListener('change',async e=>{
 });
 $('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');if(nativeStorage){nativeStorage.remove({key}).catch(()=>{$('#settings-status').textContent='Verwijderen uit Android-opslag is niet gelukt.';});}data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();applyDisplaySettings();
+const storageInfo=document.createElement('p');storageInfo.id='storage-diagnostic';storageInfo.textContent=storageDiagnostic();$('#instellingen').append(storageInfo);
 if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 })().catch(error=>{console.error('MijnMoment kon niet starten',error);});
