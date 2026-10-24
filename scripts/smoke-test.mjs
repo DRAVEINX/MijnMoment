@@ -129,3 +129,6 @@ assert.ok(js.includes('Wissen is niet gelukt. Je opgeslagen dagboektekst is beho
 
 assert.ok(js.includes("if(!persist()){data.tasks.splice(i,0,removed);"),'Een verwijderde taak moet worden hersteld als opslaan mislukt');
 assert.ok(js.includes('Verwijderen is niet gelukt. De taak is behouden.'),'Bij een mislukte taakverwijdering moet de gebruiker een duidelijke melding krijgen');
+
+assert.ok(js.includes('const previousAppointments=data.appointments;data.appointments=data.appointments.filter(a=>a.id!==item.id);if(!persist()){data.appointments=previousAppointments;'),'Bij opslagfout moet een verwijderde afspraak terugkomen');
+assert.ok(js.includes('Verwijderen is niet gelukt. De afspraak is behouden.'),'Bij mislukte afspraakverwijdering moet een duidelijke foutmelding verschijnen');
