@@ -30,7 +30,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       - name: Install and test
-        run: npm ci && npm run check && npm run build:web
+        run: npm install && npm run check && npm run build:web
       - name: Generate Android project
         run: npx cap add android
       - name: Set Android SDK versions
