@@ -1,6 +1,10 @@
-name: MijnMoment 1.0 signed release
+name: MijnMoment 1.0.1 signed release
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/release-request/v1.0.1.txt'
 permissions:
   contents: write
 concurrency:
@@ -17,6 +21,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [ "$GITHUB_REF_NAME" != "main" ]; then
+            echo "::error::Release builds must run on main."
+            exit 1
+          fi
+          test "$(node -p "require('./package.json').version")" = "1.0.1"
+          grep -Fq "MijnMoment 1.0.1 release" index.html
           echo "Building branch: $GITHUB_REF_NAME"
           echo "Building commit: $(git rev-parse HEAD)"
           if grep -q 'Terugknop moet alle functievakken verbergen' scripts/smoke-test.mjs; then
@@ -53,9 +63,9 @@ jobs:
         run: npx cap sync android
       - name: Set Android release version
         run: |
-          sed -i 's/versionCode 1/versionCode 2/; s/versionName "1.0"/versionName "1.0.0"/' android/app/build.gradle
-          grep -Eq 'versionCode[[:space:]]+2' android/app/build.gradle
-          grep -Eq 'versionName[[:space:]]+"1.0.0"' android/app/build.gradle
+          sed -i 's/versionCode 1/versionCode 3/; s/versionName "1.0"/versionName "1.0.1"/' android/app/build.gradle
+          grep -Eq 'versionCode[[:space:]]+3' android/app/build.gradle
+          grep -Eq 'versionName[[:space:]]+"1.0.1"' android/app/build.gradle
       - name: Prepare protected signing key
         shell: bash
         env:
@@ -107,9 +117,10 @@ jobs:
             --ks "$RUNNER_TEMP/mm-signing/mijnmoment-release.p12" \
             --ks-type PKCS12 --ks-key-alias mijnmoment \
             --ks-pass env:STORE_PASS --key-pass env:STORE_PASS \
-            --out MijnMoment-1.0.0-release.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
-          "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs MijnMoment-1.0.0-release.apk
-          test -s MijnMoment-1.0.0-release.apk
+            --out MijnMoment-1.0.1-release.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
+          "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs MijnMoment-1.0.1-release.apk
+          test -s MijnMoment-1.0.1-release.apk
+          sha256sum MijnMoment-1.0.1-release.apk > MijnMoment-1.0.1-release.apk.sha256
       - name: Build and sign Play Store AAB
         shell: bash
         run: |
@@ -121,21 +132,23 @@ jobs:
           test -s android/app/build/outputs/bundle/release/app-release.aab
           jarsigner -keystore "$RUNNER_TEMP/mm-signing/mijnmoment-release.p12" \
             -storetype PKCS12 -storepass:env STORE_PASS -keypass:env STORE_PASS \
-            -signedjar MijnMoment-1.0.0-google-play.aab \
+            -signedjar MijnMoment-1.0.1-google-play.aab \
             android/app/build/outputs/bundle/release/app-release.aab mijnmoment
-          jarsigner -verify -certs MijnMoment-1.0.0-google-play.aab
-          test -s MijnMoment-1.0.0-google-play.aab
+          jarsigner -verify -certs MijnMoment-1.0.1-google-play.aab
+          test -s MijnMoment-1.0.1-google-play.aab
       - name: Upload Google Play App Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: MijnMoment-1.0.0-Google-Play-AAB
-          path: MijnMoment-1.0.0-google-play.aab
+          name: MijnMoment-1.0.1-Google-Play-AAB
+          path: MijnMoment-1.0.1-google-play.aab
           if-no-files-found: error
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: MijnMoment-1.0.0-signed-APK
-          path: MijnMoment-1.0.0-release.apk
+          name: MijnMoment-1.0.1-signed-APK
+          path: |
+            MijnMoment-1.0.1-release.apk
+            MijnMoment-1.0.1-release.apk.sha256
           if-no-files-found: error
       - name: Upload encrypted key backup
         uses: actions/upload-artifact@v4
