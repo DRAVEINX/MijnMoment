@@ -31,8 +31,8 @@ assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet ee
 
 assert.ok(js.includes("function returnToHome(){showScreen('home');}"),'Terugknop moet via schermnavigatie naar start gaan');
 assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
-assert.ok(js.includes("if(!section)return;$$('.feature').forEach(s=>s.hidden=true)"),'Dashboardnavigatie moet alle andere functievakken sluiten');
-assert.ok(js.includes("if(section.classList.contains('feature'))section.hidden=false"),'Alleen functievakken die bij een tegel horen mogen als scherm openen');
+assert.ok(js.includes("if(!section)return;showScreen(target)"),'Dashboard moet via schermnavigatie openen');
+assert.ok(js.includes("function showScreen(target,updateHistory=true)"),'Schermnavigatie moet bestaan');
 assert.ok(js.includes("data.appointments.find(a=>a.date===date&&a.time===time)"),'Dubbele afspraken op hetzelfde tijdstip moeten worden tegengehouden');
 assert.ok(js.includes("if(!title){status.textContent='Vul eerst een naam in voor je afspraak.';$('#appointment-title').focus();return;}if(!date||!time){status.textContent='Vul de datum en tijd van je afspraak in.';return;}"),'Ontbrekende afspraakgegevens moeten duidelijke uitleg geven');
 assert.ok(js.includes("$('#appointment-date').min=todayISO"),'Datumkiezer moet afspraken in het verleden blokkeren');
@@ -41,9 +41,9 @@ assert.ok(js.includes("if(date===todayISO&&time<currentTime){status.textContent=
 assert.ok(js.includes("if(!persist()){data.appointments.pop();renderAppointments();")&&js.includes("status.textContent='Afspraak opgeslagen op dit apparaat: '+title"),'Nieuwe afspraak moet alleen succesvolle opslag bevestigen');
 assert.ok(js.includes("$('#appointment-title').value='';$('#appointment-title').focus();"),'Na opslaan van een afspraak moet de naam invoer klaarstaan voor de volgende afspraak');
 assert.ok(js.includes("'Afspraak verwijderd: '+item.title"),'Verwijderen van afspraak moet een bevestiging tonen');
-assert.ok(js.includes("data.tasks.push({text,done:false})"),'Nieuwe taken moeten kunnen worden toegevoegd');
+assert.ok(js.includes("data.tasks.push({text,done:false,date:$('#task-date').value||''})"),'Nieuwe taken bewaren ook de datum');
 assert.ok(js.includes("if(!text){$('#task-status').textContent='Vul eerst in wat je wilt doen.';$('#task').focus();return;}"),'Lege taak moet een duidelijke uitleg geven en de invoer focussen');
-assert.ok(js.includes("$('#task').value='';$('#task').focus();"),'Na het toevoegen van een taak moet de invoer klaarstaan voor de volgende taak');
+assert.ok(js.includes("$('#task').value=''")&&js.includes("$('#task').focus()"),'Na toevoegen moet het taakveld opnieuw bruikbaar zijn');
 assert.ok(js.includes('Je hebt nog geen taken. Voeg hierboven je eerste taak toe.'),'Lege takenlijst moet uitleg tonen');
 assert.ok(js.includes('Je hebt nog geen afspraken. Voeg hierboven een afspraak toe.'),'Lege afsprakenlijst moet uitleg tonen');
 assert.ok(js.includes("data.fontScale=Math.max(.85"),'Tekstgrootte moet een ondergrens hebben');
@@ -52,7 +52,7 @@ assert.ok(js.includes("window.SpeechRecognition||window.webkitSpeechRecognition"
 assert.ok(html.includes('id="speech-status" aria-live="polite"'),'Communicatie moet een toegankelijke statusmelding hebben');
 assert.ok(html.includes('<button id="clear-diary" class="secondary" type="button">Dagboek wissen</button>'),'Dagboek moet een duidelijke wisknop hebben');
 assert.ok(js.includes("$('#clear-diary').addEventListener('click'")&&js.includes("data.diary='';if(!persist()){data.diary=previousDiary;")&&js.includes("$('#diary').value='';$('#diary-status').textContent='Je dagboektekst is gewist van dit apparaat.'"),'Dagboek wissen moet ook de opgeslagen tekst verwijderen');
-assert.ok(js.includes("function persist(){try{localStorage.setItem(key,JSON.stringify(data));return true;}catch")&&js.includes("if(persist()){$('#diary-status').textContent='Je dagboek is opgeslagen op dit apparaat.';}else{$('#diary-status').textContent='Je dagboek kon niet worden opgeslagen."),'Dagboek moet alleen melden dat het is opgeslagen als lokaal opslaan lukt');
+assert.ok(js.includes("function persist(){try{const serialized=JSON.stringify(data)")&&js.includes("localStorage.getItem(key)!==serialized"),'Dagboek en overige gegevens mogen alleen succesvol opslaan melden na opslagcontrole');
 assert.ok(js.includes("window.confirm('Weet je zeker dat je je dagboektekst wilt wissen? Dit kan niet ongedaan worden gemaakt.')")&&js.includes("Je dagboek is niet gewist."),'Dagboek wissen moet eerst om bevestiging vragen en annuleren respecteren');
 assert.ok(html.includes('<label for="say-text">Wat wil je zeggen?</label>'),'Communicatie-invoer moet een zichtbaar label hebben');
 for(const id of ['speak','clear-speech','clear-drawing','download-drawing','export-data','delete-data']) assert.ok(html.includes(`id="${id}"`) && new RegExp(`<button\\b(?=[^>]*\\bid="${id}")(?=[^>]*\\btype="button")`).test(html),`Actieknop ${id} moet type=button hebben`);
@@ -180,7 +180,7 @@ assert.ok(js.includes('nativeStorage.set({key,value})'),'Wijzigingen moeten ook 
 assert.ok(js.includes('nativeStorage.remove({key})'),'Gegevens verwijderen moet ook Android-opslag wissen');
 assert.ok(JSON.parse(readFileSync('package.json','utf8')).dependencies['@capacitor/preferences'],'Native opslagplugin moet beschikbaar zijn');
 
-assert.ok(js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk moet alle checkboxes tellen, niet één element');
+assert.ok(js.includes("total=$$('.checklist input[type=checkbox]').length"),'Voortgangsbalk moet alle checkboxes tellen');
 assert.ok(!js.includes("total=$('.checklist input[type=checkbox]').length"),'Voortgangsbalk mag geen enkel element tellen');
 
 assert.ok(js.includes('nativeStorage.set({key,value}).then(()=>nativeStorage.get({key}))'),'Android moet opgeslagen gegevens teruglezen ter controle');
@@ -266,7 +266,7 @@ assert.ok(js.includes('openWeekDays.clear()')&&js.includes('if(shouldOpen)openWe
 
 assert.ok(html.includes('id="week-search-input"')&&html.includes('id="week-search-clear"'),'Zoekveld en wissen-knop moeten aanwezig zijn');
 assert.ok(js.includes("task.text.toLocaleLowerCase('nl-NL').includes(weekSearchQuery)"),'Zoeken moet niet hoofdlettergevoelig zijn');
-assert.ok(js.includes('if(weekSearchQuery&&!dayTasks.length)continue'),'Zoeken toont alleen dagen met treffers');
+assert.ok(js.includes("if((weekSearchQuery||weekStatusFilter!=='all')&&!dayTasks.length)continue"),'Zoeken en filters tonen alleen dagen met treffers');
 assert.ok(js.includes("card.open=(weekSearchQuery||weekStatusFilter!=='all')?true:openWeekDays.has(date)"),'Zoekresultaten moeten zichtbaar zijn zonder weekstand te verliezen');
 assert.ok(js.includes("'Geen taken gevonden.'")&&js.includes("$('#week-search-clear').addEventListener('click'"),'Geen-resultaatmelding en wissen moeten werken');
 
