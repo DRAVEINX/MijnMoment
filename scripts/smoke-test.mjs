@@ -19,6 +19,6 @@ for(const feature of ['function renderTasks()','function renderWeek()','function
 assert.ok(html.includes('aria-live="polite"'),'Toegankelijke meldingen ontbreken');
 assert.ok(css.includes('[hidden]{display:none!important}'),'Verborgen schermen moeten verborgen blijven');
 assert.ok(sw.includes('self.skipWaiting()')&&sw.includes('self.clients.claim()')&&sw.includes('caches.match(request,'),'Offline cache ontbreekt');
-assert.ok(!/\$\([^)]*\)\.forEach\s*\(/.test(js),'Een enkel DOM-element heeft geen forEach; gebruik $$ voor lijsten');
+assert.ok(!/(?<!\$)\$\([^)]*\)\.forEach\s*\(/.test(js),'Een enkel DOM-element heeft geen forEach; gebruik $$ voor lijsten');
 assert.equal(js.split('$$'+'(\'input[name="week-filter"]\').forEach').length-1,3,'Weekfilters moeten bij starten, wijzigen en import allemaal werken');
 console.log('MijnMoment basiscontroles geslaagd.');
