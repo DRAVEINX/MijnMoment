@@ -1,0 +1,4 @@
+MijnMoment 1.0.1 Android release request
+Release type: signed APK and Google Play AAB
+Source: main, including the tested Android startup fix
+Do not remove a debug installation before verifying data backup and restore.
