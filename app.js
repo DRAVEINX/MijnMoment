@@ -62,7 +62,7 @@ const openWeekDays=new Set([localDateISO()]);
 let weekSearchQuery='';
 let weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all';
 data.weekStatusFilter=weekStatusFilter;
-$('input[name="week-filter"]').forEach(input=>{
+$$('input[name="week-filter"]').forEach(input=>{
   input.checked=input.value===weekStatusFilter;
   input.addEventListener('change',()=>{
     if(!input.checked)return;
@@ -72,7 +72,7 @@ $('input[name="week-filter"]').forEach(input=>{
     if(!persist()){
       weekStatusFilter=previous;
       data.weekStatusFilter=previous;
-      $('input[name="week-filter"]').forEach(option=>{option.checked=option.value===previous;});
+      $$('input[name="week-filter"]').forEach(option=>{option.checked=option.value===previous;});
       $('#week-search-status').textContent='Filterkeuze niet opgeslagen. Je vorige keuze blijft behouden.';
     }
     renderWeek();
@@ -282,7 +282,7 @@ $('#import-file').addEventListener('change',async e=>{
     if(data.drawing){const restored=new Image();restored.onload=()=>{if(data.drawing===restored.src)ctx.drawImage(restored,0,0,canvas.width,canvas.height);};restored.src=data.drawing;}
     weekStatusFilter=['all','open','done'].includes(data.weekStatusFilter)?data.weekStatusFilter:'all';
     data.weekStatusFilter=weekStatusFilter;
-    $('input[name="week-filter"]').forEach(input=>{input.checked=input.value===weekStatusFilter;});
+    $$('input[name="week-filter"]').forEach(input=>{input.checked=input.value===weekStatusFilter;});
     renderTasks();renderAppointments();showMood();applyDisplaySettings();updateGoalsStatus();
     $('#settings-status').textContent='Back-up teruggezet. Je gegevens zijn opgeslagen op dit apparaat.';
   }catch{$('#settings-status').textContent='Het back-upbestand kon niet worden gelezen. Controleer het bestand en probeer opnieuw.';}
