@@ -13,6 +13,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+      - name: Verify selected source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Building branch: $GITHUB_REF_NAME"
+          echo "Building commit: $(git rev-parse HEAD)"
+          if grep -q 'Terugknop moet alle functievakken verbergen' scripts/smoke-test.mjs; then
+            echo "::error::Old smoke-test detected. Start a NEW workflow run on the main branch (do not re-run an old job)."
+            exit 1
+          fi
+          echo "Updated MijnMoment smoke tests confirmed."
       - name: Check recovery secret
         shell: bash
         env:
