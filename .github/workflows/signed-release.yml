@@ -110,6 +110,27 @@ jobs:
             --out MijnMoment-1.0.0-release.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
           "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs MijnMoment-1.0.0-release.apk
           test -s MijnMoment-1.0.0-release.apk
+      - name: Build and sign Play Store AAB
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd android
+          ./gradlew bundleRelease
+          cd ..
+          export STORE_PASS="$(cat "$RUNNER_TEMP/mm-signing/key-password.txt")"
+          test -s android/app/build/outputs/bundle/release/app-release.aab
+          jarsigner -keystore "$RUNNER_TEMP/mm-signing/mijnmoment-release.p12" \
+            -storetype PKCS12 -storepass:env STORE_PASS -keypass:env STORE_PASS \
+            -signedjar MijnMoment-1.0.0-google-play.aab \
+            android/app/build/outputs/bundle/release/app-release.aab mijnmoment
+          jarsigner -verify -strict -certs MijnMoment-1.0.0-google-play.aab
+          test -s MijnMoment-1.0.0-google-play.aab
+      - name: Upload Google Play App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: MijnMoment-1.0.0-Google-Play-AAB
+          path: MijnMoment-1.0.0-google-play.aab
+          if-no-files-found: error
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
