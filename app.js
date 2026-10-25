@@ -10,8 +10,19 @@ const storageDiagnostic=()=>`Opslag: ${nativeStorage?'Android beschikbaar':'Andr
 $('#storage-diagnostic').textContent=storageDiagnostic()+' · Start: bezig';
 let savedText='';
 try{savedText=localStorage.getItem(key)||localStorage.getItem('mijnmoment-data-v1')||'';}catch{}
-if(nativeStorage){
-  try{const result=await nativeStorage.get({key});if(result.value!==null)savedText=result.value;}catch{ /* Blijf bestaande browsergegevens gebruiken. */ }
+// Browseropslag is leidend. Android Preferences wordt alleen gelezen als er nog
+// geen browsergegevens zijn, en mag de bediening nooit onbeperkt blokkeren.
+if(nativeStorage&&!savedText){
+  let timeoutId;
+  try{
+    const result=await Promise.race([
+      nativeStorage.get({key}),
+      new Promise((_,reject)=>{timeoutId=setTimeout(()=>reject(new Error('Android-opslag reageert niet')),2500);})
+    ]);
+    if(result.value!==null)savedText=result.value;
+  }catch(error){
+    console.warn('MijnMoment: Android-opslag kon niet worden gelezen; de app start zonder deze back-up.',error);
+  }finally{clearTimeout(timeoutId);}
 }
 try{data={...defaults,...JSON.parse(savedText||'{}')};}catch{}
 let saveSequence=0;
@@ -290,6 +301,7 @@ $('#import-file').addEventListener('change',async e=>{
 $('#delete-data').addEventListener('click',()=>{if(!confirm('Weet je zeker dat je alle lokaal bewaarde MijnMoment-gegevens wilt verwijderen?'))return;localStorage.removeItem(key);localStorage.removeItem('mijnmoment-data-v1');if(nativeStorage){nativeStorage.remove({key}).catch(()=>{$('#settings-status').textContent='Verwijderen uit Android-opslag is niet gelukt.';});}data={...defaults,tasks:[],appointments:[],goals:[false,false,false]};$('#diary').value='';$('#say-text').value='';if('speechSynthesis'in window)speechSynthesis.cancel();$('#speech-status').textContent='';$('#dictation-status').textContent='';ctx.clearRect(0,0,canvas.width,canvas.height);$$('.checklist input[type=checkbox]').forEach(cb=>cb.checked=false);updateGoalsStatus();renderTasks();renderAppointments();showMood();applyDisplaySettings();$('#settings-status').textContent='Je lokale gegevens zijn verwijderd.';$('#appointment-status').textContent='';$('#diary-status').textContent='';});
 renderTasks();renderAppointments();showMood();applyDisplaySettings();
 $('#storage-diagnostic').textContent=storageDiagnostic()+' · Start: klaar';
+$('#startup-status').textContent='Bediening: gereed';
 if(!window.Capacitor?.isNativePlatform?.()&&'serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
-})().catch(error=>{console.error('MijnMoment kon niet starten',error);const status=document.querySelector('#storage-diagnostic');if(status)status.textContent='Opslagcontrole: opstartfout ('+(error?.message||'onbekend')+')';});
+})().catch(error=>{console.error('MijnMoment kon niet starten',error);const status=document.querySelector('#storage-diagnostic');if(status)status.textContent='Opslagcontrole: opstartfout ('+(error?.message||'onbekend')+')';const startup=document.querySelector('#startup-status');if(startup)startup.textContent='Bediening: opstartfout ('+(error?.message||'onbekend')+')';});
