@@ -17,6 +17,9 @@ for(const m of js.matchAll(/\$\('#([a-zA-Z0-9_-]+)'\)/g))assert.ok(ids.includes(
 for(const id of ['task-list','task-status','week-days','week-search-input','appointment-list','diary','export-data','import-file'])assert.ok(ids.includes(id),'Belangrijk onderdeel ontbreekt: '+id);
 for(const feature of ['function renderTasks()','function renderWeek()','function persist()','function showScreen(','nativeStorage.set({key,value})','nativeStorage.get({key})','incoming.tasks','incoming.appointments'])assert.ok(js.includes(feature),'Appfunctie ontbreekt: '+feature);
 assert.ok(html.includes('aria-live="polite"'),'Toegankelijke meldingen ontbreken');
+assert.ok(html.includes('id="startup-status"'),'Opstartdiagnose ontbreekt');
+assert.ok(js.includes('nativeStorage&&!savedText')&&js.includes('Promise.race(['),'Android-opslag mag de bediening niet blijven blokkeren');
+assert.ok(html.includes('MM-20261025-AE'),'Nieuwe testversie ontbreekt');
 assert.ok(css.includes('[hidden]{display:none!important}'),'Verborgen schermen moeten verborgen blijven');
 assert.ok(sw.includes('self.skipWaiting()')&&sw.includes('self.clients.claim()')&&sw.includes('caches.match(request,'),'Offline cache ontbreekt');
 assert.ok(!/(?<!\$)\$\([^)]*\)\.forEach\s*\(/.test(js),'Een enkel DOM-element heeft geen forEach; gebruik $$ voor lijsten');
