@@ -29,7 +29,7 @@ assert.ok(js.includes("$('#drawing-status').textContent='Je tekening wordt gedow
 assert.ok(js.includes('function returnToHome()'),'Terugknop moet terug naar het startscherm navigeren');
 assert.ok(js.includes("makeButton('← Terug naar start'"),'Elke functie moet een duidelijke terugknop hebben');
 
-assert.ok(js.includes("$$('.feature').forEach(s=>s.hidden=true)"),'Terugknop moet alle functievakken verbergen');
+assert.ok(js.includes("function returnToHome(){showScreen('home');}"),'Terugknop moet via schermnavigatie naar start gaan');
 assert.ok(js.includes("$$('.feature').forEach(section=>"),'Elke functie moet een terugknop krijgen');
 assert.ok(js.includes("if(!section)return;$$('.feature').forEach(s=>s.hidden=true)"),'Dashboardnavigatie moet alle andere functievakken sluiten');
 assert.ok(js.includes("if(section.classList.contains('feature'))section.hidden=false"),'Alleen functievakken die bij een tegel horen mogen als scherm openen');
