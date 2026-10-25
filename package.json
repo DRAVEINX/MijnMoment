@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node scripts/smoke-test.mjs",
     "check": "node --check app.js && node scripts/smoke-test.mjs",
-    "build:web": "mkdir -p dist && cp index.html styles.css app.js manifest.webmanifest sw.js dist/ && cp -r assets dist/assets",
+    "build:web": "node scripts/build-web.mjs",
     "android:init": "npx cap add android",
     "android:sync": "npx cap sync android"
   },
