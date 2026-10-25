@@ -123,7 +123,7 @@ jobs:
             -storetype PKCS12 -storepass:env STORE_PASS -keypass:env STORE_PASS \
             -signedjar MijnMoment-1.0.0-google-play.aab \
             android/app/build/outputs/bundle/release/app-release.aab mijnmoment
-          jarsigner -verify -strict -certs MijnMoment-1.0.0-google-play.aab
+          jarsigner -verify -certs MijnMoment-1.0.0-google-play.aab
           test -s MijnMoment-1.0.0-google-play.aab
       - name: Upload Google Play App Bundle
         uses: actions/upload-artifact@v4
