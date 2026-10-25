@@ -19,7 +19,8 @@ for(const feature of ['function renderTasks()','function renderWeek()','function
 assert.ok(html.includes('aria-live="polite"'),'Toegankelijke meldingen ontbreken');
 assert.ok(html.includes('id="startup-status"'),'Opstartdiagnose ontbreekt');
 assert.ok(js.includes('nativeStorage&&!savedText')&&js.includes('Promise.race(['),'Android-opslag mag de bediening niet blijven blokkeren');
-assert.ok(html.includes('MM-20261025-AE'),'Nieuwe testversie ontbreekt');
+assert.ok(html.includes('MijnMoment 1.0.1 release')&&html.includes('MM-20261025-AF'),'Releaseversie ontbreekt');
+assert.equal(pkg.version,'1.0.1','Pakketversie komt niet overeen met Android-release');
 assert.ok(css.includes('[hidden]{display:none!important}'),'Verborgen schermen moeten verborgen blijven');
 assert.ok(sw.includes('self.skipWaiting()')&&sw.includes('self.clients.claim()')&&sw.includes('caches.match(request,'),'Offline cache ontbreekt');
 assert.ok(!/(?<!\$)\$\([^)]*\)\.forEach\s*\(/.test(js),'Een enkel DOM-element heeft geen forEach; gebruik $$ voor lijsten');
