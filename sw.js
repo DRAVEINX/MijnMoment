@@ -1,4 +1,4 @@
-const CACHE = 'mijnmoment-v5';
+const CACHE = 'mijnmoment-v6';
 const ASSETS = [
   './',
   './index.html',
