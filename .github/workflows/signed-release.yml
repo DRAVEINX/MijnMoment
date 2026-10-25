@@ -1,32 +1,36 @@
-name: MijnMoment signed APK (manual)
+name: MijnMoment 1.0 signed release
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: mijnmoment-release-signing
+  cancel-in-progress: false
 jobs:
   signed-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Require signing secrets
-        env:
-          KEYSTORE_B64: ${{ secrets.MM_RELEASE_KEYSTORE_BASE64 }}
-          STORE_PASS: ${{ secrets.MM_RELEASE_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.MM_RELEASE_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.MM_RELEASE_KEY_PASSWORD }}
-        run: |
-          for name in KEYSTORE_B64 STORE_PASS KEY_ALIAS KEY_PASS; do
-            if [ -z "${!name}" ]; then echo "::error::Missing signing secret: $name"; exit 1; fi
-          done
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Check recovery secret
+        shell: bash
+        env:
+          RECOVERY_PASSWORD: ${{ secrets.MM_RELEASE_RECOVERY_PASSWORD }}
+        run: |
+          if [ "${#RECOVERY_PASSWORD}" -lt 20 ]; then
+            echo "::error::Create GitHub Actions secret MM_RELEASE_RECOVERY_PASSWORD with a unique password of at least 20 characters."
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
       - name: Install and test
-        run: npm install && npm run check && npm run build:web
+        run: npm ci && npm run check && npm run build:web
       - name: Generate Android project
         run: npx cap add android
       - name: Set Android SDK versions
@@ -41,23 +45,58 @@ jobs:
           sed -i 's/versionCode 1/versionCode 2/; s/versionName "1.0"/versionName "1.0.0"/' android/app/build.gradle
           grep -Eq 'versionCode[[:space:]]+2' android/app/build.gradle
           grep -Eq 'versionName[[:space:]]+"1.0.0"' android/app/build.gradle
+      - name: Prepare protected signing key
+        shell: bash
+        env:
+          RECOVERY_PASSWORD: ${{ secrets.MM_RELEASE_RECOVERY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$RUNNER_TEMP/mm-signing"
+          cd "$RUNNER_TEMP/mm-signing"
+          if [ -f "$GITHUB_WORKSPACE/.github/release-key/mijnmoment-signing.enc" ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 250000 \
+              -in "$GITHUB_WORKSPACE/.github/release-key/mijnmoment-signing.enc" \
+              -out bundle.tar.gz -pass env:RECOVERY_PASSWORD
+            tar -xzf bundle.tar.gz
+          else
+            openssl rand -hex 32 > key-password.txt
+            STORE_PASS="$(cat key-password.txt)"
+            keytool -genkeypair -noprompt -storetype PKCS12 \
+              -keystore mijnmoment-release.p12 -alias mijnmoment \
+              -keyalg RSA -keysize 3072 -validity 10000 \
+              -dname "CN=MijnMoment, OU=Android, O=MijnMoment, C=NL" \
+              -storepass "$STORE_PASS" -keypass "$STORE_PASS"
+            tar -czf bundle.tar.gz mijnmoment-release.p12 key-password.txt
+            mkdir -p "$GITHUB_WORKSPACE/.github/release-key"
+            openssl enc -aes-256-cbc -salt -pbkdf2 -iter 250000 \
+              -in bundle.tar.gz \
+              -out "$GITHUB_WORKSPACE/.github/release-key/mijnmoment-signing.enc" \
+              -pass env:RECOVERY_PASSWORD
+            cd "$GITHUB_WORKSPACE"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/release-key/mijnmoment-signing.enc
+            git commit -m "Store encrypted MijnMoment release signing backup"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+          test -s "$RUNNER_TEMP/mm-signing/mijnmoment-release.p12"
+          test -s "$RUNNER_TEMP/mm-signing/key-password.txt"
       - name: Build unsigned release APK
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleRelease
-      - name: Sign and verify release APK
+      - name: Sign and verify APK
         shell: bash
-        env:
-          KEYSTORE_B64: ${{ secrets.MM_RELEASE_KEYSTORE_BASE64 }}
-          STORE_PASS: ${{ secrets.MM_RELEASE_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.MM_RELEASE_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.MM_RELEASE_KEY_PASSWORD }}
         run: |
           set -euo pipefail
-          trap 'rm -f "$RUNNER_TEMP/mijnmoment-release.jks"' EXIT
-          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/mijnmoment-release.jks"
+          export STORE_PASS="$(cat "$RUNNER_TEMP/mm-signing/key-password.txt")"
           SDK_BUILD_TOOLS="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
           "$SDK_BUILD_TOOLS/zipalign" -p -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
-          "$SDK_BUILD_TOOLS/apksigner" sign --ks "$RUNNER_TEMP/mijnmoment-release.jks" --ks-key-alias "$KEY_ALIAS" --ks-pass env:STORE_PASS --key-pass env:KEY_PASS --out MijnMoment-1.0.0-release.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
+          "$SDK_BUILD_TOOLS/apksigner" sign \
+            --ks "$RUNNER_TEMP/mm-signing/mijnmoment-release.p12" \
+            --ks-type PKCS12 --ks-key-alias mijnmoment \
+            --ks-pass env:STORE_PASS --key-pass env:STORE_PASS \
+            --out MijnMoment-1.0.0-release.apk "$RUNNER_TEMP/mijnmoment-aligned.apk"
           "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs MijnMoment-1.0.0-release.apk
           test -s MijnMoment-1.0.0-release.apk
       - name: Upload signed APK
@@ -65,4 +104,10 @@ jobs:
         with:
           name: MijnMoment-1.0.0-signed-APK
           path: MijnMoment-1.0.0-release.apk
+          if-no-files-found: error
+      - name: Upload encrypted key backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: MijnMoment-encrypted-release-key-BACKUP
+          path: .github/release-key/mijnmoment-signing.enc
           if-no-files-found: error
